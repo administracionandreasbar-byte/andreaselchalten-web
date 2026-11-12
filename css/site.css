@@ -204,17 +204,89 @@ p{margin:0 0 .8em;max-width:62ch}
 @media (max-width:620px){.form{grid-template-columns:1fr}}
 
 /* Panel de sol y clima */
-.vereda{background:var(--crema);border-radius:var(--radio);padding:18px 18px 16px}
-.vereda h3{font-size:1.05rem;margin-bottom:10px}
-.dia{position:relative;display:flex;height:34px;border-radius:999px;overflow:hidden;margin:6px 0 4px}
-.dia span{height:100%}
-.b-poco{background:#f3d98f}.b-medio{background:#f0bf45}.b-pleno{background:#e8a317}.b-bajando{background:#d98b3a}.b-cerros{background:#8c8f97}.b-noche{background:#3a3f55}
-.marca-hora{position:absolute;top:-4px;bottom:-4px;width:4px;margin-left:-2px;background:var(--carbon);border-radius:2px}
-.escala{display:flex;justify-content:space-between;font-size:.78rem;color:var(--suave)}
-.clima{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
-.clima div{background:#fff;border-radius:var(--radio);padding:10px 12px}
-.clima b{display:block;font-size:1.25rem}
-.clima small{color:var(--suave);font-size:.8rem}
-.consejo{margin:12px 0 0;font-weight:600}
-.fuente{font-size:.75rem;color:var(--suave);margin:8px 0 0}
-@media (max-width:520px){.clima{grid-template-columns:1fr 1fr}}
+.vereda{background:#fff;border-radius:22px;padding:0;overflow:hidden;box-shadow:0 14px 40px rgba(33,31,32,.12)}
+.vereda-cab{padding:18px 20px 12px}
+.vereda-cab h3{font-size:1.05rem;margin:0 0 2px}
+.vereda-cab p{margin:0;font-weight:700;color:var(--rojo)}
+.escena{display:block;width:100%;height:auto}
+.escena-horas text{font-size:11px;fill:#211f20;font-weight:600;font-family:inherit}
+.clima{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px 20px 4px}
+.dato-clima{display:flex;align-items:center;gap:10px}
+.dato-clima small{display:block;color:var(--suave);font-size:.78rem}
+.dato-clima b{display:block;font-size:1.35rem;line-height:1.1}
+.termo{width:24px;height:58px;flex-shrink:0}
+.medidor{width:72px;height:44px;flex-shrink:0}
+.consejo{margin:10px 20px 0;font-weight:700;padding:10px 14px;border-radius:12px;background:var(--crema)}
+.consejo.alerta{background:#fbe1dd;color:#8f1f17}
+.tira-titulo{margin:16px 20px 6px;font-weight:700;font-size:.9rem}
+.tira-titulo small{font-weight:500;color:var(--suave)}
+.tira{display:flex;gap:6px;overflow-x:auto;padding:0 20px 6px;scrollbar-width:none}
+.tira::-webkit-scrollbar{display:none}
+.hora{flex:0 0 52px;text-align:center;border-radius:12px;padding:8px 0;background:var(--papel);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.8rem}
+.hora small{color:var(--suave);font-size:.72rem}
+.hora b{font-size:1rem}
+.hora .flecha{width:16px;height:16px;color:var(--carbon)}
+.hora.sel{background:var(--carbon);color:var(--crema)}
+.hora.sel small,.hora.sel .flecha{color:var(--crema)}
+.hora.ventosa span{color:var(--rojo);font-weight:800}
+.hora.sel.ventosa span{color:#ff8a7a}
+.vereda .fuente{font-size:.75rem;color:var(--suave);margin:10px 20px 16px}
+/* ===== Rediseño: menos cajas, más forma ===== */
+.btn-claro{background:var(--crema);color:var(--carbon)}
+.btn-claro:hover{background:#fff}
+.cresta{display:block;width:100%;height:56px;position:absolute;left:0;bottom:-1px;z-index:2}
+.cresta.arriba{top:-55px;bottom:auto}
+@media (max-width:760px){.cresta{height:32px}.cresta.arriba{top:-31px}}
+
+/* Portada a pantalla completa */
+.portada{position:relative;min-height:min(88vh,760px);display:flex;align-items:flex-end;color:var(--crema);background:var(--carbon);overflow:hidden}
+.portada-foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 32%}
+.portada::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(25,22,22,.92) 0%,rgba(25,22,22,.72) 38%,rgba(25,22,22,.15) 72%),linear-gradient(0deg,rgba(25,22,22,.65),transparent 45%)}
+.portada-texto{position:relative;z-index:2;width:100%;padding-bottom:110px;padding-top:80px}
+.portada h1{max-width:12ch;margin-bottom:18px;text-shadow:0 2px 24px rgba(0,0,0,.35)}
+.portada .bajada{max-width:44ch;font-size:1.12rem;color:rgba(239,243,218,.9);margin-bottom:26px}
+@media (max-width:760px){
+  .portada{min-height:auto;flex-direction:column;align-items:stretch}
+  .portada-foto{position:relative;height:46vh;min-height:300px}
+  .portada::before{background:linear-gradient(0deg,var(--carbon) 0%,var(--carbon) 52%,rgba(33,31,32,.2) 70%,transparent 85%)}
+  .portada-texto{margin-top:-90px;padding-top:0;padding-bottom:64px}
+}
+.carteles{position:relative}
+
+/* Platos sobre la mesa */
+.mesa{background:var(--crema)}
+.platos{grid-template-columns:repeat(4,1fr);gap:28px;align-items:start}
+.plato{text-align:center;position:relative}
+.plato .foto{margin:0 auto 14px;max-width:260px}
+.plato-circulo img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;filter:drop-shadow(0 18px 22px rgba(33,31,32,.28));transition:transform .4s ease}
+.plato-circulo:nth-child(odd) img{transform:rotate(-6deg)}
+.plato-circulo:nth-child(even) img{transform:rotate(5deg)}
+.plato-circulo:hover img{transform:rotate(0) scale(1.03)}
+.plato-arco img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:999px 999px 22px 22px;box-shadow:0 18px 30px rgba(33,31,32,.22)}
+.plato:nth-child(even){margin-top:36px}
+.plato h3{margin-top:4px}
+.plato p{margin:4px auto 10px;color:var(--suave);font-size:.95rem;max-width:26ch}
+.etiqueta-precio{display:inline-block;background:var(--carbon);color:var(--crema);padding:4px 12px;border-radius:999px;font-size:.92rem}
+@media (max-width:960px){.platos{grid-template-columns:repeat(2,1fr);gap:24px 16px}.plato:nth-child(even){margin-top:28px}}
+
+/* Happy hour con cresta */
+.hh{position:relative;overflow:visible}
+.hh .wrap{grid-template-columns:auto 1fr auto}
+.hh-plato{width:170px;height:170px;border-radius:50%;filter:drop-shadow(0 16px 20px rgba(0,0,0,.35));transform:rotate(-8deg);margin:-60px 0 -50px}
+@media (max-width:860px){.hh-plato{display:none}}
+
+/* Reseñas sin cajas */
+.resenas{display:block;columns:3 280px;column-gap:40px}
+.resena{break-inside:avoid;background:none!important;border:0;padding:0 0 28px;margin:0 0 6px;display:block;position:relative}
+.resena blockquote{font-size:1.08rem;line-height:1.5;padding-top:30px;position:relative}
+.resena blockquote::before{content:"“";position:absolute;top:-14px;left:-4px;font-size:4.2rem;line-height:1;color:var(--rojo);font-weight:800}
+.resena blockquote p{margin:0 0 10px}
+.resena figcaption{display:block;font-size:.88rem;color:var(--suave)}
+.resena figcaption b{color:var(--carbon)}
+
+/* Grupos en oscuro */
+.grupos{position:relative;background:var(--carbon);color:var(--crema)}
+.grupos p{color:rgba(239,243,218,.86)}
+.arco-foto img{aspect-ratio:4/5!important;border-radius:999px 999px var(--radio) var(--radio)}
+.dividido .arco-foto{max-width:440px;justify-self:center;width:100%}
+.mapa{border-radius:28px}

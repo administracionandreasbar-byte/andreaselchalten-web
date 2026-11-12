@@ -127,9 +127,8 @@ def resenas_html(lang, cuales):
     for r in [RESENAS[i] for i in cuales]:
         nota = t["orig"][r["lang"]]
         out.append(f"""<figure class="resena">
-<div class="estrellas" aria-label="{r['estrellas']} {t['estrellas_txt']}">{estrellas(r['estrellas'])}</div>
 <blockquote><p>{e(r[lang])}</p></blockquote>
-<figcaption><span>{e(r['autor'])}</span><span>{nota}</span></figcaption>
+<figcaption><span class="estrellas" aria-label="{r['estrellas']} {t['estrellas_txt']}">{estrellas(r['estrellas'])}</span> <b>{e(r['autor'])}</b>{f' <span>· {nota}</span>' if nota else ''}</figcaption>
 </figure>""")
     return '<div class="resenas">' + "\n".join(out) + "</div>"
 
@@ -144,40 +143,42 @@ def btn_wa(texto, mensaje, clase="btn btn-wa"):
     return f'<a class="{clase}" href="{wa_link(mensaje)}">{ICONO_WA}{e(texto)}</a>'
 
 # ---------------- INICIO ----------------
+def cresta(color, clase=""):
+    # Silueta de cerros para unir secciones sin cortes rectos
+    return (f'<svg class="cresta {clase}" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">'
+            f'<path fill="{color}" d="M0 90V62l70-18 55 14 80-34 60 22 48-30 38 16 52-26 40 12 62-14 44 22 70-28 34 10 30-20 52 30 66-8 58 24 74-36 46 16 40-12 58 28 70-20 52 14 66-30 44 18 38-10 70 26 52-8V90z"/></svg>')
+
 def inicio(lang):
     es = lang == "es"
     t = T[lang]
     platos = [
-        ("burger-tehuelche", "Tehuelche", "Hamburguesa con guacamole, panceta y cheddar." if es else "Burger with guacamole, bacon and cheddar.", 33000),
-        ("milanesa-napolitana", "Milanesa napolitana", "Abundante, para compartir después del sendero." if es else "A generous breaded cutlet, made for sharing after the trail.", 33000),
-        ("sandwich-puestero", "Sandwich del Puestero" if es else "Puestero sandwich", "Bondiola braseada con cerveza roja, con papas." if es else "Red ale-braised pork shoulder, with fries.", 34000),
-        ("fetuccini-carbonara", "Fetuccini carbonara" if es else "Fettuccine carbonara", "Pasta con la salsa que elijas." if es else "Pasta with the sauce you choose.", 25000),
+        ("plato-napolitana", "circulo", "Milanesa napolitana", "Abundante, para compartir." if es else "Generous, made for sharing.", 33000),
+        ("plato-puestero", "circulo", "Sandwich del Puestero" if es else "Puestero sandwich", "Bondiola braseada con cerveza roja, con papas." if es else "Red ale-braised pork shoulder, with fries.", 34000),
+        ("burger-tehuelche-800", "arco", "Tehuelche", "Guacamole, panceta y cheddar, con papas." if es else "Guacamole, bacon and cheddar, with fries.", 33000),
+        ("plato-volcan", "circulo", "Volcán de chocolate" if es else "Chocolate lava cake", "Con helado y frutos rojos." if es else "With ice cream and red berries.", 16000),
     ]
-    platos_html = "".join(f"""<article class="plato">
-<img src="/img/{img}-800.webp" alt="{e(nom)}" width="800" height="1067" loading="lazy">
+    platos_html = "".join(f"""<article class="plato plato-{forma}">
+<div class="foto"><img src="/img/{img}.webp" alt="{e(nom)}" width="640" height="{640 if forma=='circulo' else 853}" loading="lazy"></div>
 <h3>{e(nom)}</h3>
-<p>{e(desc)} <span class="precio">{precio(p, lang)}</span></p>
-</article>""" for img, nom, desc, p in platos)
+<p>{e(desc)}</p>
+<span class="precio etiqueta-precio">{precio(p, lang)}</span>
+</article>""" for img, forma, nom, desc, p in platos)
     titulo = "Andreas – Food & Drinks for Adventurers | Restaurante en El Chaltén" if es else "Andreas – Food & Drinks for Adventurers | Restaurant in El Chaltén"
     desc = ("Restaurante en El Chaltén para después del sendero: hamburguesas, milanesas, pizzas, pastas y bife, con cerveza artesanal tirada. Todos los días de 12 a 24 h." if es else
             "Restaurant in El Chaltén for after the trail: burgers, milanesas, pizza, pasta and steak, with craft beer on tap. Open daily, noon to midnight.")
     h = head(lang, "inicio", titulo, desc) + header(lang, "inicio")
-    h += f"""<section class="hero">
-<div class="wrap">
-<div>
+    h += f"""<section class="portada">
+<img class="portada-foto" src="/img/salon-sandwich-1400.webp" srcset="/img/salon-sandwich-800.webp 800w, /img/salon-sandwich-1400.webp 1400w" sizes="100vw" alt="{'Sandwich del Puestero con papas en el salón de Andreas, con la calle San Martín de fondo' if es else 'Puestero sandwich with fries in the Andreas dining room, San Martín street behind'}" width="1400" height="1867" fetchpriority="high">
+<div class="wrap portada-texto">
 <p class="estado" data-estado><i></i><span>{'Todos los días de 12 a 24 h' if es else 'Open daily, noon to midnight'}</span></p>
 <h1>{'Bajaste del cerro. Acá se come.' if es else 'Off the trail. Time to eat.'}</h1>
 <p class="bajada">{'Hamburguesas, milanesas, pizzas caseras y bife, con cerveza tirada. En el centro de El Chaltén, sobre la calle principal.' if es else 'Burgers, milanesas, homemade pizza and steak, with beer on tap. In the centre of El Chaltén, on the main street.'}</p>
 <div class="acciones">
-{btn_wa('Reservar por WhatsApp' if es else 'Book on WhatsApp', t['wa_hola'] + ('quiero reservar una mesa.' if es else 'I want to book a table.'))}
-<a class="btn btn-linea" href="{RUTAS['menu'][lang]}">{'Ver el menú' if es else 'See the menu'}</a>
+<a class="btn btn-wa" href="{RUTAS['reservas'][lang]}">{'Reservar mesa' if es else 'Book a table'}</a>
+<a class="btn btn-claro" href="{RUTAS['menu'][lang]}">{'Ver el menú' if es else 'See the menu'}</a>
 </div>
 </div>
-<figure>
-<img src="/img/salon-sandwich-1400.webp" srcset="/img/salon-sandwich-800.webp 800w, /img/salon-sandwich-1400.webp 1400w" sizes="(max-width:860px) 100vw, 46vw" alt="{'Sandwich del Puestero con papas, en el salón de Andreas, con la calle San Martín de fondo' if es else 'Puestero sandwich with fries in the Andreas dining room, San Martín street behind'}" width="1400" height="1867" fetchpriority="high">
-<figcaption>{'Sandwich del Puestero, en el salón.' if es else 'The Puestero sandwich, in our dining room.'}</figcaption>
-</figure>
-</div>
+{cresta('#eff3da')}
 </section>
 <nav class="carteles" aria-label="{'Datos rápidos' if es else 'Quick facts'}">
 <div class="wrap">
@@ -186,7 +187,7 @@ def inicio(lang):
 <a class="cartel" href="{N['maps']}"><small>{'Cómo llegar' if es else 'Directions'}</small><strong>San Martín 351</strong></a>
 </div>
 </nav>
-<section class="seccion">
+<section class="seccion mesa">
 <div class="wrap">
 <div class="cabeza">
 <div><h2>{'Lo que más sale' if es else 'What people order'}</h2>
@@ -197,13 +198,14 @@ def inicio(lang):
 </div>
 </section>
 <section class="hh" id="happy-hour">
+{cresta('#c8322a','arriba')}
 <div class="wrap">
 <div class="grande">{'16–20 h' if es else '4–8 pm'}</div>
 <p><b>Happy Hour.</b> {'Dos cervezas por $15.000, todos los días. Ideal para la vuelta del sendero, en el salón calefaccionado o en las mesas de afuera.' if es else 'Two beers for $15,000, every day. Just right after the trail, in our heated dining room or at the outdoor tables.'}</p>
-{btn_wa('Consultar' if es else 'Ask us', t['wa_hola'], 'btn btn-linea')}
+<img class="hh-plato" src="/img/plato-milanesa-sm.webp" alt="" width="320" height="320" loading="lazy">
 </div>
 </section>
-<section class="seccion alt">
+<section class="seccion">
 <div class="wrap">
 <div class="cabeza">
 <div><h2>{'Lo dicen los que bajaron del cerro' if es else 'From people who just came down the mountain'}</h2>
@@ -213,9 +215,10 @@ def inicio(lang):
 {resenas_html(lang, [0,1,2,3,4,5,6,7])}
 </div>
 </section>
-<section class="seccion">
+<section class="seccion grupos">
+{cresta('#211f20','arriba')}
 <div class="wrap dividido">
-<img style="object-position:50% 88%" src="/img/napolitana-salon-800.webp" alt="{'Milanesa napolitana con ensalada en el salón de noche' if es else 'Milanesa napolitana with salad in the dining room at night'}" width="800" height="1067" loading="lazy">
+<div class="arco-foto"><img style="object-position:50% 88%" src="/img/napolitana-salon-800.webp" alt="{'Milanesa napolitana con ensalada en el salón de noche' if es else 'Milanesa napolitana with salad in the dining room at night'}" width="800" height="1067" loading="lazy"></div>
 <div>
 <h2>{'Grupos, agencias y guías' if es else 'Groups, agencies and guides'}</h2>
 <p style="margin-top:14px">{'Recibimos grupos de hasta 25 personas con menú cerrado, servido en menos de 30 minutos. Guía y chofer no pagan, emitimos factura A y coordinamos todo por escrito.' if es else 'We host groups of up to 25 people with a set menu, served in under 30 minutes. Guides and drivers eat free, we issue invoices and confirm everything in writing.'}</p>

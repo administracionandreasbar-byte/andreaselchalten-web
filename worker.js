@@ -12,7 +12,7 @@ export default {
 
 async function clima(ctx) {
   const cache = caches.default;
-  const clave = new Request('https://andreaselchalten.com/api/clima-v1');
+  const clave = new Request('https://andreaselchalten.com/api/clima-v2');
   const guardado = await cache.match(clave);
   if (guardado) return guardado;
   const r = await fetch(`https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${LAT}&lon=${LON}`, {
@@ -23,7 +23,8 @@ async function clima(ctx) {
   const horas = datos.properties.timeseries.map(p => ({
     t: p.time,
     temp: Math.round(p.data.instant.details.air_temperature),
-    viento: Math.round(p.data.instant.details.wind_speed * 3.6)
+    viento: Math.round(p.data.instant.details.wind_speed * 3.6),
+    dir: Math.round(p.data.instant.details.wind_from_direction)
   }));
   const resp = new Response(JSON.stringify({ fuente: 'MET Norway', horas }), {
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=3600' }
