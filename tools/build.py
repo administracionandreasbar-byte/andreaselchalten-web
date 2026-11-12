@@ -73,7 +73,7 @@ def head(lang, pagina, titulo, descripcion):
 <meta name="apple-mobile-web-app-title" content="Andreas">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400..900&display=swap">
 <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>

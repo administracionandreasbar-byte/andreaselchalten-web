@@ -5,6 +5,8 @@
   --crema:#eff3da;
   --papel:#f8f9f0;
   --musgo:#4e6b3a;
+  --rojo:#c8322a;
+  --rojo-osc:#a82820;
   --linea:rgba(33,31,32,.16);
   --suave:#5c5650;
   --ancho:1180px;
@@ -14,15 +16,15 @@
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
-body{margin:0;background:var(--papel);color:var(--carbon);font-family:"Archivo",system-ui,sans-serif;font-size:1.0625rem;line-height:1.55;font-stretch:100%}
+body{margin:0;background:var(--papel);color:var(--carbon);font-family:"Montserrat",system-ui,sans-serif;font-size:1.0625rem;line-height:1.55;}
 img{max-width:100%;height:auto;display:block}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--terracota);outline-offset:3px;border-radius:2px}
 .wrap{max-width:var(--ancho);margin:0 auto;padding:0 20px}
-h1,h2,h3{font-stretch:125%;font-weight:800;line-height:1.05;letter-spacing:-.01em;margin:0}
-h1{font-size:clamp(2.3rem,6.4vw,4.6rem)}
-h2{font-size:clamp(1.75rem,3.6vw,2.6rem)}
-h3{font-size:1.15rem;font-stretch:112%;font-weight:700;line-height:1.2}
+h1,h2,h3{font-weight:800;line-height:1.05;letter-spacing:-.01em;margin:0}
+h1{font-size:clamp(2.1rem,5.6vw,4rem)}
+h2{font-size:clamp(1.6rem,3.2vw,2.35rem)}
+h3{font-size:1.15rem;font-weight:700;line-height:1.2}
 p{margin:0 0 .8em;max-width:62ch}
 .salto{position:absolute;left:-9999px}
 .salto:focus{left:12px;top:12px;z-index:50;background:var(--crema);padding:8px 12px}
@@ -32,7 +34,7 @@ p{margin:0 0 .8em;max-width:62ch}
 .top .wrap{display:flex;align-items:center;gap:18px;min-height:64px}
 .marca{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
 .marca img{width:44px;height:44px}
-.marca span{font-stretch:125%;font-weight:800;font-size:1.05rem}
+.marca span{font-weight:800;font-size:1.05rem}
 .nav{display:flex;gap:4px;margin-left:auto;align-items:center}
 .nav a{text-decoration:none;padding:8px 12px;border-radius:999px;font-weight:600;font-size:.95rem}
 .nav a:hover,.nav a[aria-current="page"]{background:rgba(239,243,218,.12)}
@@ -76,10 +78,10 @@ p{margin:0 0 .8em;max-width:62ch}
 .carteles{background:var(--crema);padding:28px 0}
 .carteles .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .cartel{background:var(--terracota);color:#fff;padding:18px 44px 18px 22px;clip-path:polygon(0 0,calc(100% - 26px) 0,100% 50%,calc(100% - 26px) 100%,0 100%);text-decoration:none;display:block}
-.cartel:nth-child(2){background:var(--carbon)}
+.cartel:nth-child(2){background:var(--rojo)}
 .cartel:nth-child(3){background:var(--musgo)}
 .cartel small{display:block;font-size:.85rem;opacity:.85;margin-bottom:2px}
-.cartel strong{font-stretch:118%;font-weight:800;font-size:1.25rem;line-height:1.15;display:block}
+.cartel strong{font-weight:800;font-size:1.25rem;line-height:1.15;display:block}
 @media (max-width:760px){.carteles .wrap{grid-template-columns:1fr}}
 
 /* Secciones */
@@ -98,16 +100,16 @@ p{margin:0 0 .8em;max-width:62ch}
 @media (max-width:960px){.platos{grid-template-columns:repeat(2,1fr)}}
 
 /* Happy hour */
-.hh{background:var(--terracota);color:#fff;padding:56px 0}
+.hh{background:var(--rojo);color:#fff;padding:56px 0}
 .hh .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:36px;align-items:center}
-.hh .grande{font-stretch:125%;font-weight:900;font-size:clamp(3rem,8vw,5.5rem);line-height:.9}
+.hh .grande{font-weight:900;font-size:clamp(2.8rem,7vw,5rem);line-height:.9}
 .hh p{margin:0;font-size:1.15rem;max-width:40ch}
 @media (max-width:860px){.hh .wrap{grid-template-columns:1fr;gap:16px}}
 
 /* Reseñas */
 .puntaje{display:flex;align-items:center;gap:14px;text-decoration:none}
-.puntaje b{font-stretch:125%;font-weight:900;font-size:2.6rem;line-height:1}
-.estrellas{color:var(--terracota);letter-spacing:2px;font-size:1.05rem}
+.puntaje b{font-weight:900;font-size:2.6rem;line-height:1}
+.estrellas{color:var(--rojo);letter-spacing:2px;font-size:1.05rem}
 .resenas{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .resena{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);padding:20px;display:flex;flex-direction:column;gap:12px;margin:0}
 .seccion:not(.alt) .resena{background:#fff}
@@ -124,7 +126,7 @@ p{margin:0 0 .8em;max-width:62ch}
 /* Datos */
 .datos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border-top:2px solid var(--carbon);margin:28px 0}
 .dato{padding:18px 18px 18px 0;border-bottom:1px solid var(--linea)}
-.dato b{display:block;font-stretch:125%;font-weight:800;font-size:1.7rem;line-height:1.1;margin-bottom:4px}
+.dato b{display:block;font-weight:800;font-size:1.7rem;line-height:1.1;margin-bottom:4px}
 .dato span{color:var(--suave);font-size:.95rem}
 
 /* Ubicación */
@@ -158,10 +160,10 @@ p{margin:0 0 .8em;max-width:62ch}
 .carta .nota{color:var(--suave);margin:10px 0 0}
 .items{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;column-gap:48px}
 .item{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:16px 0;border-bottom:1px solid var(--linea)}
-.item h3{font-size:1.05rem;font-stretch:108%}
+.item h3{font-size:1.05rem;}
 .item p{grid-column:1/-1;margin:0;color:var(--suave);font-size:.95rem}
-.marca-item{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:2px;font-stretch:100%}
-.m-top{background:var(--terracota);color:#fff}
+.marca-item{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:2px;}
+.m-top{background:var(--rojo);color:#fff}
 .m-veg{background:var(--musgo);color:#fff}
 @media (max-width:760px){.items{grid-template-columns:1fr}.carta section{scroll-margin-top:160px}}
 .aviso{background:var(--crema);border-radius:var(--radio);padding:18px 20px;margin-top:40px;font-size:.95rem}
@@ -177,7 +179,7 @@ p{margin:0 0 .8em;max-width:62ch}
 .tarifas th,.tarifas td{text-align:left;padding:16px 12px 16px 0;border-bottom:1px solid var(--linea);vertical-align:top}
 .tarifas th{font-size:.85rem;color:var(--suave);font-weight:600;border-bottom:2px solid var(--carbon)}
 .tarifas td:last-child,.tarifas th:last-child{text-align:right;padding-right:0}
-.tarifas td b{font-stretch:112%}
+.tarifas td b{}
 .lista{margin:0;padding-left:20px}
 .lista li{margin-bottom:6px}
 
