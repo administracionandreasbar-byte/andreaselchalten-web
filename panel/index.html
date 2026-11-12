@@ -1,0 +1,23 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>Reservas del día | Andreas</title><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/site.css">
+<style>.wrap{max-width:720px}.res{background:#fff;border-radius:16px;padding:14px 16px;margin:10px 0;display:flex;justify-content:space-between;gap:12px;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.06)}.res b{font-size:1.1rem}.res small{color:#5c5650}.vacio{color:#5c5650}</style></head>
+<body><main class="seccion"><div class="wrap">
+<h1 style="font-size:2rem">Reservas web</h1>
+<form id="f" class="form" style="margin:20px 0"><div><label for="pin">Clave</label><input id="pin" type="password" required autocomplete="current-password"></div><div><label for="dia">Día</label><input id="dia" type="date" required></div><div class="full"><button class="btn btn-wa" type="submit">Ver reservas</button></div></form>
+<p class="error" id="e" hidden></p><div id="l"></div>
+</div></main>
+<script>
+var f=document.getElementById('f'),pin=document.getElementById('pin'),dia=document.getElementById('dia'),l=document.getElementById('l'),e=document.getElementById('e');
+var hoy=new Date(Date.now()-3*36e5).toISOString().slice(0,10);dia.value=hoy;
+try{pin.value=sessionStorage.getItem('pin')||''}catch(x){}
+function cargar(){e.hidden=true;fetch('/api/panel?fecha='+dia.value,{headers:{'x-pin':pin.value}}).then(function(r){return r.json().then(function(d){return{s:r.status,d:d}})}).then(function(r){
+ if(r.s===401){e.textContent='Clave incorrecta.';e.hidden=false;return}
+ if(r.s!==200){e.textContent='El sistema de reservas todavía no está activo.';e.hidden=false;return}
+ try{sessionStorage.setItem('pin',pin.value)}catch(x){}
+ var rs=r.d.reservas;if(!rs.length){l.innerHTML='<p class="vacio">No hay reservas web para este día.</p>';return}
+ l.innerHTML=rs.map(function(x){return '<div class="res"><div><b>'+x.hora+' · Mesa '+x.mesa+'</b><br>'+esc(x.nombre)+' · '+x.personas+' pers.<br><small>'+esc(x.email)+'</small></div><button class="btn btn-linea" data-k="'+x.key+'">Liberar mesa</button></div>'}).join('');
+ l.querySelectorAll('[data-k]').forEach(function(b){b.onclick=function(){if(!confirm('¿Liberar esta mesa? La reserva se borra.'))return;fetch('/api/panel?key='+encodeURIComponent(b.dataset.k),{method:'DELETE',headers:{'x-pin':pin.value}}).then(cargar)}})
+})}
+function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+f.onsubmit=function(ev){ev.preventDefault();cargar()};
+</script></body></html>

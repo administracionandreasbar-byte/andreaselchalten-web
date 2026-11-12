@@ -182,6 +182,7 @@
     if (!fecha.value || !hora.value) { panel.hidden = true; return; }
     var hm = hora.value.split(':'), h = Math.max(12, +hm[0] + (+hm[1]) / 60);
     var fr = franja(fecha.value, h), c = buscar(fecha.value, h), cerrado = c && c.viento >= VIENTO_CIERRE;
+    document.dispatchEvent(new CustomEvent('patio-viento', { detail: { cerrado: !!cerrado } }));
     var lugar = document.getElementById('r-lugar');
     if (lugar) { var op = lugar.options[2]; op.disabled = !!cerrado; if (cerrado && lugar.selectedIndex === 2) lugar.selectedIndex = 1; }
     var datos;

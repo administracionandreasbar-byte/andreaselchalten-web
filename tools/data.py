@@ -162,3 +162,25 @@ PLATOS_AGENCIAS = [
 VIANDA = (16000,
           "Sándwich de jamón y queso (o vegetariano de queso, tomate y lechuga), una fruta, una barra de cereal y agua.",
           "Ham and cheese sandwich (or veggie: cheese, tomato and lettuce), a piece of fruit, a cereal bar and water.")
+
+# Plano de mesas (borrador del 12/11, a confirmar con Álvaro).
+# zona, id, etiqueta, forma (rect/circ), x, y, ancho, alto (o radio), capacidad, reservable
+PLANO_SALON = {"ancho": 850, "alto": 470}
+PLANO_PATIO = {"ancho": 850, "alto": 300}
+MESAS = [
+    ("salon", "S1", "1", "rect", 70, 50, 170, 60, 4, True),
+    ("salon", "S2", "2", "rect", 530, 50, 100, 60, 2, True),
+    ("salon", "S3", "3", "rect", 735, 50, 70, 130, 4, True),
+    ("salon", "S4", "4", "rect", 360, 110, 100, 60, 2, True),
+    ("salon", "S5", "5", "rect", 300, 230, 200, 70, 4, True),
+    ("salon", "S6", "6", "rect", 60, 190, 80, 140, 4, True),
+    ("salon", "S7", "7", "rect", 735, 215, 70, 60, 2, True),
+    ("salon", "S8", "8", "rect", 720, 305, 90, 150, 6, True),
+    ("patio", "PA", "A", "circ", 80, 90, 34, 0, 2, True),
+    ("patio", "P1", "9", "circ", 200, 150, 26, 0, 2, True),
+    ("patio", "P2", "10", "circ", 320, 110, 26, 0, 2, True),
+    ("patio", "P3", "11", "circ", 440, 150, 26, 0, 2, True),
+    ("patio", "P4", "12", "circ", 560, 110, 26, 0, 2, True),
+    ("patio", "PB", "B", "circ", 420, 230, 34, 0, 2, True),
+    ("patio", "PC", "C", "rect", 660, 60, 70, 190, 6, True),
+]

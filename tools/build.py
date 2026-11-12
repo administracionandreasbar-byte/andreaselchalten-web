@@ -171,7 +171,7 @@ def inicio(lang):
 <img class="portada-foto" src="/img/salon-sandwich-1400.webp" srcset="/img/salon-sandwich-800.webp 800w, /img/salon-sandwich-1400.webp 1400w" sizes="100vw" alt="{'Sandwich del Puestero con papas en el salón de Andreas, con la calle San Martín de fondo' if es else 'Puestero sandwich with fries in the Andreas dining room, San Martín street behind'}" width="1400" height="1867" fetchpriority="high">
 <div class="wrap portada-texto">
 <p class="estado" data-estado><i></i><span>{'Todos los días de 12 a 24 h' if es else 'Open daily, noon to midnight'}</span></p>
-<h1>{'Bajaste del cerro. Acá se come.' if es else 'Off the trail. Time to eat.'}</h1>
+<h1>{'Del sendero a la mesa.' if es else 'Off the trail. Time to eat.'}</h1>
 <p class="bajada">{'Hamburguesas, milanesas, pizzas caseras y bife, con cerveza tirada. En el centro de El Chaltén, sobre la calle principal.' if es else 'Burgers, milanesas, homemade pizza and steak, with beer on tap. In the centre of El Chaltén, on the main street.'}</p>
 <div class="acciones">
 <a class="btn btn-wa" href="{RUTAS['reservas'][lang]}">{'Reservar mesa' if es else 'Book a table'}</a>
@@ -238,8 +238,7 @@ def inicio(lang):
 <p>{'Salón calefaccionado, patio con mesas afuera y wifi.' if es else 'Heated dining room, outdoor patio and free wifi.'}</p>
 <div class="acciones"><a class="btn btn-wa" href="{N['maps']}">{'Cómo llegar' if es else 'Get directions'}</a>{btn_wa('WhatsApp', t['wa_hola'], 'btn btn-linea')}</div>
 </div>
-<div class="ubic-fotos"><img class="arco-chico" src="/img/frente-patio-800.webp" alt="{'Frente de Andreas con el patio y la calle San Martín' if es else 'Andreas storefront with the patio and San Martín street'}" width="800" height="1067" loading="lazy">
-<iframe class="mapa" src="{N['maps_embed']}" title="{'Mapa de Andreas en El Chaltén' if es else 'Map of Andreas in El Chaltén'}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+<iframe class="mapa" src="{N['maps_embed']}" title="{'Mapa de Andreas en El Chaltén' if es else 'Map of Andreas in El Chaltén'}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>
 </section>
 """
@@ -389,35 +388,87 @@ def form_grupo(lang):
 </form>"""
 
 # ---------------- RESERVAS ----------------
+def plano_svg(zona, lang):
+    es = lang == "es"
+    from data import MESAS, PLANO_SALON, PLANO_PATIO
+    P = PLANO_SALON if zona == "salon" else PLANO_PATIO
+    W, H = P["ancho"], P["alto"]
+    if zona == "salon":
+        fondo = (f'<rect x="8" y="8" width="{W-16}" height="{H-16}" rx="14" class="piso"/>'
+                 f'<rect x="60" y="2" width="230" height="10" rx="5" class="vidrio"/><rect x="540" y="2" width="230" height="10" rx="5" class="vidrio"/>'
+                 f'<rect x="385" y="2" width="80" height="10" rx="5" class="puerta"/>'
+                 f'<text x="425" y="34" class="ref" text-anchor="middle">{"Entrada" if es else "Entrance"}</text>'
+                 f'<text x="175" y="34" class="ref" text-anchor="middle">{"Ventana a la calle" if es else "Street window"}</text>'
+                 f'<rect x="30" y="400" width="200" height="44" rx="8" class="meson"/><text x="130" y="427" class="ref" text-anchor="middle">{"Barra" if es else "Bar"}</text>'
+                 f'<rect x="{W-14}" y="200" width="8" height="250" class="chapa"/><rect x="6" y="150" width="8" height="220" class="pared"/>')
+    else:
+        fondo = (f'<rect x="8" y="8" width="{W-16}" height="{H-16}" rx="14" class="piso-patio"/>'
+                 f'<rect x="8" y="8" width="600" height="14" rx="4" class="fachada"/>'
+                 f'<text x="300" y="44" class="ref" text-anchor="middle">{"Frente del local" if es else "Restaurant front"}</text>'
+                 f'<rect x="8" y="{H-20}" width="{W-16}" height="12" rx="4" class="baranda"/>'
+                 f'<text x="300" y="{H-28}" class="ref" text-anchor="middle">{"Baranda y calle San Martín" if es else "Railing and San Martín street"}</text>')
+    mesas = []
+    for z, mid, lab, forma, x, y, w, h, cap, res in MESAS:
+        if z != zona:
+            continue
+        nombre = (f"Mesa {lab}, para {cap}" if es else f"Table {lab}, seats {cap}")
+        if forma == "circ":
+            sillas = "".join(f'<circle cx="{x+ (w+12)*dx}" cy="{y+(w+12)*dy}" r="9" class="silla"/>' for dx, dy in ((-1, 0), (1, 0)))
+            figura = f'<circle cx="{x}" cy="{y}" r="{w}" class="tabla"/>'
+            tx, ty = x, y + 5
+        else:
+            n = cap // 2
+            sillas = "".join(f'<rect x="{x + (i+0.5)*w/n - 9}" y="{y-16}" width="18" height="10" rx="4" class="silla"/><rect x="{x + (i+0.5)*w/n - 9}" y="{y+h+6}" width="18" height="10" rx="4" class="silla"/>' for i in range(n)) if w >= h else \
+                     "".join(f'<rect x="{x-16}" y="{y + (i+0.5)*h/n - 9}" width="10" height="18" rx="4" class="silla"/><rect x="{x+w+6}" y="{y + (i+0.5)*h/n - 9}" width="10" height="18" rx="4" class="silla"/>' for i in range(n))
+            figura = f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" class="tabla"/>'
+            tx, ty = x + w / 2, y + h / 2 + 5
+        mesas.append(f'<g class="mesa" data-id="{mid}" data-cap="{cap}" data-zona="{zona}" data-label="{lab}" tabindex="0" role="button" aria-pressed="false" aria-label="{nombre}">{sillas}{figura}<text x="{tx}" y="{ty}" text-anchor="middle" class="num">{lab}</text><text x="{tx}" y="{ty+16}" text-anchor="middle" class="cap">{cap}p</text></g>')
+    return f'<svg class="plano" viewBox="0 0 {W} {H}" role="group" aria-label="{"Plano del " + ("salón" if zona=="salon" else "patio") if es else ("Dining room" if zona=="salon" else "Patio") + " plan"}">{fondo}{"".join(mesas)}</svg>'
+
 def reservas(lang):
     es = lang == "es"
-    intro = "Hola, vi la web de Andreas y quiero reservar una mesa." if es else "Hi, I saw the Andreas website and want to book a table."
     titulo = "Reservar mesa | Andreas, El Chaltén" if es else "Book a table | Andreas, El Chaltén"
-    desc = "Reservá tu mesa en Andreas, El Chaltén. Todos los días de 12 a 24 h." if es else "Book your table at Andreas, El Chaltén. Open daily, noon to midnight."
+    desc = "Elegí tu mesa en el plano y reservá en Andreas, El Chaltén." if es else "Pick your table on the plan and book at Andreas, El Chaltén."
+    horas = [f"{h:02d}:{m:02d}" for h in range(12, 23) for m in (0, 30)]
+    opciones = "".join(f'<option value="{t}">{t}</option>' for t in horas)
     h = head(lang, "reservas", titulo, desc) + header(lang, "reservas")
     h += f"""<section class="menu-hero"><div class="wrap">
-<h1>{'Reservar mesa' if es else 'Book a table'}</h1>
-<p>{'Completá los datos y se abre WhatsApp con tu reserva escrita. La mesa queda confirmada cuando te respondemos.' if es else 'Fill in your details and WhatsApp opens with your booking ready to send. Your table is confirmed when we reply.'}</p>
+<h1>{'Elegí tu mesa' if es else 'Pick your table'}</h1>
+<p>{'Tocá una mesa en el plano. Después elegís día y hora, y listo.' if es else 'Tap a table on the plan, then choose the day and time. That is it.'}</p>
 </div></section>
-<section class="seccion"><div class="wrap dividido" style="align-items:start">
-<form class="form" data-wa="{e(intro)}" novalidate>
-<div class="full"><label for="r-nombre">{'Nombre' if es else 'Name'}</label><input id="r-nombre" required autocomplete="name" data-etiqueta="{'Nombre' if es else 'Name'}"></div>
-<div><label for="r-pax">{'Personas' if es else 'People'}</label><input id="r-pax" type="number" min="1" max="25" required inputmode="numeric" data-etiqueta="{'Personas' if es else 'People'}"></div>
-<div><label for="r-fecha">{'Fecha' if es else 'Date'}</label><input id="r-fecha" type="date" required data-etiqueta="{'Fecha' if es else 'Date'}"></div>
-<div><label for="r-hora">{'Hora' if es else 'Time'}</label><input id="r-hora" type="time" min="12:00" max="23:00" required data-etiqueta="{'Hora' if es else 'Time'}"><p class="ayuda">{'Abrimos de 12 a 24 h.' if es else 'We are open noon to midnight.'}</p></div>
-<div><label for="r-lugar">{'Dónde' if es else 'Where'}</label><select id="r-lugar" data-etiqueta="{'Prefiere' if es else 'Prefers'}"><option>{'Me da igual' if es else 'No preference'}</option><option>{'Adentro (salón calefaccionado)' if es else 'Inside (heated room)'}</option><option>{'Afuera (patio)' if es else 'Outside (patio)'}</option></select></div>
-<div class="full vereda" data-vereda hidden aria-live="polite"></div>
-<div><label for="r-idioma">{'Idioma' if es else 'Language'}</label><select id="r-idioma" data-etiqueta="{'Idioma' if es else 'Language'}"><option>Español</option><option{' selected' if not es else ''}>English</option><option>Português</option><option>Français</option></select></div>
-<div class="full"><label for="r-notas">{'Comentarios' if es else 'Notes'}</label><textarea id="r-notas" data-etiqueta="{'Comentarios' if es else 'Notes'}" placeholder="{'Cumpleaños, alergias, silla para bebé…' if es else 'Birthday, allergies, high chair…'}"></textarea></div>
-<label class="check full"><input type="checkbox" required> <span>{'Acepto que Andreas use estos datos solo para gestionar mi reserva (ley 25.326).' if es else 'I agree that Andreas will use this information only to manage my booking.'}</span></label>
-<p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>
-<div class="full"><button class="btn btn-wa" type="submit">{ICONO_WA}{'Enviar reserva por WhatsApp' if es else 'Send booking on WhatsApp'}</button></div>
-</form>
-<div>
-<div class="arco-foto"><img src="/img/patio-cerro-800.webp" alt="{'El patio de Andreas al atardecer, con el cerro de fondo' if es else 'The Andreas patio at dusk, with the mountain behind'}" width="800" height="1067" loading="lazy"></div>
-<p style="margin-top:16px">{'¿Son más de 25 o vienen con una agencia?' if es else 'More than 25 people, or travelling with an agency?'} <a href="{RUTAS['agencias'][lang]}">{'Mirá la propuesta para grupos.' if es else 'See our group offer.'}</a></p>
+<section class="seccion reservar" data-reservar data-lang="{lang}">
+<div class="wrap reservar-grid">
+<div class="plano-caja">
+<div class="pestanas" role="tablist">
+<button type="button" role="tab" aria-selected="true" data-zona="salon">{'Salón' if es else 'Dining room'}</button>
+<button type="button" role="tab" aria-selected="false" data-zona="patio">Patio</button>
 </div>
-</div></section>
+<div class="plano-zona" data-plano="salon">{plano_svg('salon', lang)}</div>
+<div class="plano-zona" data-plano="patio" hidden>{plano_svg('patio', lang)}</div>
+<p class="leyenda-plano"><span class="ley libre"></span>{'Libre' if es else 'Available'} <span class="ley elegida"></span>{'Tu mesa' if es else 'Your table'} <span class="ley ocupada"></span>{'Reservada' if es else 'Booked'}</p>
+</div>
+<form class="ficha" novalidate data-ficha>
+<p class="ficha-vacia" data-vacia>{'Elegí una mesa en el plano para empezar.' if es else 'Choose a table on the plan to start.'}</p>
+<div data-pasos hidden>
+<p class="ficha-mesa" data-titulo-mesa></p>
+<div class="form">
+<div><label for="r-fecha">{'Día' if es else 'Day'}</label><input id="r-fecha" type="date" required></div>
+<div><label for="r-hora">{'Hora' if es else 'Time'}</label><select id="r-hora" required><option value="">--</option>{opciones}</select></div>
+<div><label for="r-pax">{'Personas' if es else 'People'}</label><select id="r-pax" required></select></div>
+<div class="full estado-mesa" data-estado-mesa hidden></div>
+<div class="full vereda" data-vereda hidden aria-live="polite"></div>
+<div class="full"><label for="r-nombre">{'Nombre' if es else 'Name'}</label><input id="r-nombre" required autocomplete="name"></div>
+<div class="full"><label for="r-email">{'Correo electrónico' if es else 'Email'}</label><input id="r-email" type="email" required autocomplete="email"></div>
+<label class="check full"><input id="r-ok" type="checkbox" required> <span>{'Acepto que Andreas use estos datos solo para gestionar mi reserva (ley 25.326).' if es else 'I agree that Andreas will use this information only to manage my booking.'}</span></label>
+<p class="error full" hidden role="alert" data-error></p>
+<div class="full"><button class="btn btn-wa" type="submit" data-enviar>{'Reservar' if es else 'Book'}</button></div>
+</div>
+</div>
+<div class="listo" data-listo hidden tabindex="-1"></div>
+</form>
+</div>
+</section>
+<script src="/js/reservar.js" defer></script>
 """
     return h + footer(lang)
 

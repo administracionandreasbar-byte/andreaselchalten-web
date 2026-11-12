@@ -291,7 +291,45 @@ p{margin:0 0 .8em;max-width:62ch}
 .dividido .arco-foto{max-width:440px;justify-self:center;width:100%}
 .mapa{border-radius:28px}
 
-.ubic-fotos{display:grid;grid-template-columns:.8fr 1.2fr;gap:16px;align-items:stretch}
-.ubic-fotos .arco-chico{width:100%;height:100%;object-fit:cover;border-radius:999px 999px 22px 22px}
-.ubic-fotos .mapa{aspect-ratio:auto;height:100%;min-height:320px}
-@media (max-width:560px){.ubic-fotos{grid-template-columns:1fr}.ubic-fotos .arco-chico{aspect-ratio:4/5}}
+
+/* Reserva interactiva */
+.reservar{background:var(--crema)}
+.reservar-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:28px;align-items:start}
+@media (max-width:860px){.reservar-grid{grid-template-columns:1fr}}
+.plano-caja{background:#fff;border-radius:22px;padding:14px;box-shadow:0 14px 40px rgba(33,31,32,.1)}
+.pestanas{display:flex;gap:6px;background:var(--papel);padding:5px;border-radius:999px;margin-bottom:12px;width:max-content}
+.pestanas button{border:0;background:transparent;font:inherit;font-weight:700;padding:9px 18px;border-radius:999px;cursor:pointer;color:var(--carbon)}
+.pestanas button[aria-selected="true"]{background:var(--carbon);color:var(--crema)}
+.plano{width:100%;height:auto;display:block}
+.plano .piso{fill:#f4efe6;stroke:#211f20;stroke-width:4}
+.plano .piso-patio{fill:#e8e4dc;stroke:#211f20;stroke-width:2;stroke-dasharray:6 6}
+.plano .vidrio{fill:#8ec9ea}.plano .puerta{fill:var(--rojo)}.plano .fachada{fill:#3b3530}.plano .baranda{fill:#8b5a2b}
+.plano .meson{fill:#d9d3c7}.plano .chapa{fill:#9aa3a8}.plano .pared{fill:#e6e1d8}
+.plano .ref{font-size:14px;fill:#6b645d;font-weight:600;font-family:inherit}
+.mesa{cursor:pointer;outline:none}
+.mesa .tabla{fill:#c79a64;stroke:#8a6238;stroke-width:2;transition:fill .15s}
+.mesa .silla{fill:#3a3a3a}
+.mesa .num{font-size:20px;font-weight:800;fill:#211f20;font-family:inherit;pointer-events:none}
+.mesa .cap{font-size:12px;fill:#211f20;font-family:inherit;pointer-events:none;opacity:.75}
+.mesa:hover .tabla,.mesa:focus-visible .tabla{fill:#e2b67c;stroke:#211f20;stroke-width:3}
+.mesa.elegida .tabla{fill:var(--rojo);stroke:#7d1a14;stroke-width:3}
+.mesa.elegida .num,.mesa.elegida .cap{fill:#fff}
+.mesa.ocupada{cursor:not-allowed}
+.mesa.ocupada .tabla{fill:#cfcac2;stroke:#aaa}
+.mesa.ocupada .num,.mesa.ocupada .cap{fill:#8b857e}
+.leyenda-plano{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.88rem;margin:10px 4px 2px;color:var(--suave)}
+.ley{display:inline-block;width:14px;height:14px;border-radius:4px;margin-left:8px}
+.ley:first-child{margin-left:0}
+.ley.libre{background:#c79a64}.ley.elegida{background:var(--rojo)}.ley.ocupada{background:#cfcac2}
+.ficha{background:#fff;border-radius:22px;padding:22px;box-shadow:0 14px 40px rgba(33,31,32,.1);position:sticky;top:90px}
+.ficha .form{grid-template-columns:1fr 1fr 1fr;max-width:none}
+@media (max-width:520px){.ficha .form{grid-template-columns:1fr 1fr}}
+.ficha-vacia{margin:0;color:var(--suave);font-size:1.05rem}
+.ficha-mesa{margin:0 0 16px;font-size:1.05rem}
+.ficha-mesa b{font-size:1.3rem;color:var(--rojo)}
+.estado-mesa{background:#fbe1dd;color:#8f1f17;font-weight:700;padding:10px 14px;border-radius:12px}
+.ficha .vereda{box-shadow:none;border:1px solid var(--linea)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.listo{outline:none}
+.listo-titulo{font-size:1.6rem;font-weight:800;color:var(--musgo);margin-bottom:6px}
+@media (max-width:860px){.ficha{position:static}}
