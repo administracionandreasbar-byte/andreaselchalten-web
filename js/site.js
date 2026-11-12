@@ -77,19 +77,20 @@
   var en = document.documentElement.lang === 'en';
   var fecha = document.getElementById('r-fecha'), hora = document.getElementById('r-hora');
   var LAT = -49.33, LON = -72.89, pronostico = null, pedido = false;
+  var VIENTO_CIERRE = 40; // km/h: desde acá el patio figura cerrado
   var TX = en ? {
     titulo: 'Sun and weather on the patio', aprox: 'Approximate, for reference only.',
     poco: 'Little sun: only the strip next to the street', medio: 'Partial sun on the patio', pleno: 'Full sun on the patio',
     bajando: 'Sun going down, still some light', cerros: 'Shade: the sun hides behind the mountains', noche: 'Night: the patio is in the shade',
     temp: 'Temperature', viento: 'Wind', sens: 'Feels', sinp: 'The forecast for that day is not available yet (about 9 days ahead).',
-    adentro: 'Strong wind: better inside, in the heated room.', fresco: 'Chilly: if you sit outside, bring a jacket.', sombra: 'No sun on the patio by then: inside is more comfortable.', afuera: 'Good for the patio.',
+    adentro: 'Patio closed due to wind. We save you a table inside, in the heated room.', fresco: 'Chilly: if you sit outside, bring a jacket.', sombra: 'No sun on the patio by then: inside is more comfortable.', afuera: 'Good for the patio.',
     calmo: 'calm', moderado: 'moderate', fuerte: 'strong', fuente: 'Forecast: MET Norway. Sun: estimate based on the sun\'s path.'
   } : {
     titulo: 'Sol y clima en el patio', aprox: 'Aproximado, solo como referencia.',
     poco: 'Poco sol: solo la franja pegada a la calle', medio: 'Medio sol en el patio', pleno: 'Sol pleno en el patio',
     bajando: 'El sol empieza a bajar, todavía hay luz', cerros: 'Sombra: el sol se esconde detrás de los cerros', noche: 'De noche: el patio queda en sombra',
     temp: 'Temperatura', viento: 'Viento', sens: 'Sensación', sinp: 'El pronóstico para ese día todavía no está disponible (llega hasta unos 9 días).',
-    adentro: 'Viento fuerte: mejor adentro, en el salón calefaccionado.', fresco: 'Fresco: si vas al patio, llevá abrigo.', sombra: 'A esa hora ya no hay sol en el patio: adentro se está más cómodo.', afuera: 'Buen momento para el patio.',
+    adentro: 'Patio cerrado por viento. Te esperamos adentro, en el salón calefaccionado.', fresco: 'Fresco: si vas al patio, llevá abrigo.', sombra: 'A esa hora ya no hay sol en el patio: adentro se está más cómodo.', afuera: 'Buen momento para el patio.',
     calmo: 'calmo', moderado: 'moderado', fuerte: 'fuerte', fuente: 'Pronóstico: MET Norway. Sol: estimación según el recorrido del sol.'
   };
 
@@ -132,7 +133,9 @@
     var barras = bs.map(function (b) { return '<span class="b-' + b[0] + '" style="width:' + ((b[2] - b[1]) / 12 * 100) + '%" title="' + TX[b[0]] + '"></span>'; }).join('');
     var c = buscar(fecha.value, h), clima;
     if (c) {
-      var consejo = c.viento >= 40 ? TX.adentro : (actual[0] === 'cerros' || actual[0] === 'noche') ? TX.sombra : c.temp < 12 ? TX.fresco : TX.afuera;
+      var consejo = c.viento >= VIENTO_CIERRE ? TX.adentro : (actual[0] === 'cerros' || actual[0] === 'noche') ? TX.sombra : c.temp < 12 ? TX.fresco : TX.afuera;
+      var lugar = document.getElementById('r-lugar');
+      if (lugar) { var op = lugar.options[2]; op.disabled = c.viento >= VIENTO_CIERRE; if (op.disabled && lugar.selectedIndex === 2) lugar.selectedIndex = 1; }
       clima = '<div class="clima"><div><small>' + TX.temp + '</small><b>' + c.temp + ' °C</b></div><div><small>' + TX.viento + '</small><b>' + c.viento + ' km/h</b><small>' + nivelViento(c.viento) + '</small></div></div><p class="consejo">' + consejo + '</p>';
     } else clima = pronostico ? '<p class="fuente">' + TX.sinp + '</p>' : '';
     panel.innerHTML = '<h3>' + TX.titulo + '</h3><p style="margin:0 0 4px"><b>' + TX[actual[0]] + '.</b></p>' +
