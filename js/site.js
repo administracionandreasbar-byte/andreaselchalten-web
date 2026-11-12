@@ -69,3 +69,77 @@
     });
   });
 })();
+
+// Sol en la vereda y clima (ilustrativo)
+(function () {
+  var panel = document.querySelector('[data-vereda]');
+  if (!panel) return;
+  var en = document.documentElement.lang === 'en';
+  var fecha = document.getElementById('r-fecha'), hora = document.getElementById('r-hora');
+  var LAT = -49.33, LON = -72.89, pronostico = null, pedido = false;
+  var TX = en ? {
+    titulo: 'Sun and weather on the patio', aprox: 'Approximate, for reference only.',
+    poco: 'Little sun: only the strip next to the street', medio: 'Partial sun on the patio', pleno: 'Full sun on the patio',
+    bajando: 'Sun going down, still some light', cerros: 'Shade: the sun hides behind the mountains', noche: 'Night: the patio is in the shade',
+    temp: 'Temperature', viento: 'Wind', sens: 'Feels', sinp: 'The forecast for that day is not available yet (about 9 days ahead).',
+    adentro: 'Strong wind: better inside, in the heated room.', fresco: 'Chilly: if you sit outside, bring a jacket.', sombra: 'No sun on the patio by then: inside is more comfortable.', afuera: 'Good for the patio.',
+    calmo: 'calm', moderado: 'moderate', fuerte: 'strong', fuente: 'Forecast: MET Norway. Sun: estimate based on the sun\'s path.'
+  } : {
+    titulo: 'Sol y clima en el patio', aprox: 'Aproximado, solo como referencia.',
+    poco: 'Poco sol: solo la franja pegada a la calle', medio: 'Medio sol en el patio', pleno: 'Sol pleno en el patio',
+    bajando: 'El sol empieza a bajar, todavía hay luz', cerros: 'Sombra: el sol se esconde detrás de los cerros', noche: 'De noche: el patio queda en sombra',
+    temp: 'Temperatura', viento: 'Viento', sens: 'Sensación', sinp: 'El pronóstico para ese día todavía no está disponible (llega hasta unos 9 días).',
+    adentro: 'Viento fuerte: mejor adentro, en el salón calefaccionado.', fresco: 'Fresco: si vas al patio, llevá abrigo.', sombra: 'A esa hora ya no hay sol en el patio: adentro se está más cómodo.', afuera: 'Buen momento para el patio.',
+    calmo: 'calmo', moderado: 'moderado', fuerte: 'fuerte', fuente: 'Pronóstico: MET Norway. Sol: estimación según el recorrido del sol.'
+  };
+
+  function elevacion(d) { // d en UTC
+    var n = (d.getTime() - Date.UTC(2000, 0, 1, 12)) / 864e5;
+    var L = (280.46 + 0.9856474 * n) % 360, g = ((357.528 + 0.9856003 * n) % 360) * Math.PI / 180;
+    var lam = (L + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * Math.PI / 180, eps = (23.439 - 4e-7 * n) * Math.PI / 180;
+    var ra = Math.atan2(Math.cos(eps) * Math.sin(lam), Math.cos(lam)), dec = Math.asin(Math.sin(eps) * Math.sin(lam));
+    var gmst = (18.697374558 + 24.06570982441908 * n) % 24, lst = ((gmst * 15 + LON) % 360) * Math.PI / 180;
+    var H = lst - ra, la = LAT * Math.PI / 180;
+    return Math.asin(Math.sin(la) * Math.sin(dec) + Math.cos(la) * Math.cos(dec) * Math.cos(H)) * 180 / Math.PI;
+  }
+  function utc(f, h) { var p = f.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2], 0, 0) + (h + 3) * 36e5); }
+  function horaCruce(f, umbral) { // primera hora desde las 17 en que la elevación baja del umbral
+    for (var h = 17; h <= 24; h += 0.25) if (elevacion(utc(f, h)) < umbral) return h;
+    return 24;
+  }
+  function franjas(f) {
+    var cerros = horaCruce(f, 12), noche = horaCruce(f, -1);
+    return [['poco', 12, 14], ['medio', 14, 15.5], ['pleno', 15.5, Math.min(19, cerros)], ['bajando', Math.min(19, cerros), cerros], ['cerros', cerros, noche], ['noche', noche, 24]]
+      .filter(function (b) { return b[2] > b[1]; });
+  }
+  function nivelViento(k) { return k < 20 ? TX.calmo : k < 40 ? TX.moderado : TX.fuerte; }
+  function buscar(f, h) {
+    if (!pronostico) return null;
+    var objetivo = utc(f, h).getTime(), mejor = null, dif = Infinity;
+    pronostico.forEach(function (p) { var d = Math.abs(new Date(p.t).getTime() - objetivo); if (d < dif) { dif = d; mejor = p; } });
+    return dif <= 4 * 36e5 ? mejor : null;
+  }
+  function pedirClima() {
+    if (pedido) return; pedido = true;
+    fetch('/api/clima').then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (d && d.horas) { pronostico = d.horas; dibujar(); } }).catch(function () {});
+  }
+  function dibujar() {
+    if (!fecha.value || !hora.value) { panel.hidden = true; return; }
+    var hm = hora.value.split(':'), h = +hm[0] + (+hm[1]) / 60;
+    if (h < 12) h = 12;
+    var bs = franjas(fecha.value), actual = bs.filter(function (b) { return h >= b[1] && h < b[2]; })[0] || bs[bs.length - 1];
+    var barras = bs.map(function (b) { return '<span class="b-' + b[0] + '" style="width:' + ((b[2] - b[1]) / 12 * 100) + '%" title="' + TX[b[0]] + '"></span>'; }).join('');
+    var c = buscar(fecha.value, h), clima;
+    if (c) {
+      var consejo = c.viento >= 40 ? TX.adentro : (actual[0] === 'cerros' || actual[0] === 'noche') ? TX.sombra : c.temp < 12 ? TX.fresco : TX.afuera;
+      clima = '<div class="clima"><div><small>' + TX.temp + '</small><b>' + c.temp + ' °C</b></div><div><small>' + TX.viento + '</small><b>' + c.viento + ' km/h</b><small>' + nivelViento(c.viento) + '</small></div></div><p class="consejo">' + consejo + '</p>';
+    } else clima = pronostico ? '<p class="fuente">' + TX.sinp + '</p>' : '';
+    panel.innerHTML = '<h3>' + TX.titulo + '</h3><p style="margin:0 0 4px"><b>' + TX[actual[0]] + '.</b></p>' +
+      '<div class="dia" role="img" aria-label="' + TX[actual[0]] + '">' + barras + '<i class="marca-hora" style="left:' + ((h - 12) / 12 * 100) + '%"></i></div>' +
+      '<div class="escala"><span>12 h</span><span>15 h</span><span>18 h</span><span>21 h</span><span>24 h</span></div>' + clima +
+      '<p class="fuente">' + TX.aprox + ' ' + TX.fuente + '</p>';
+    panel.hidden = false;
+  }
+  [fecha, hora].forEach(function (el) { el.addEventListener('change', function () { pedirClima(); dibujar(); }); el.addEventListener('input', dibujar); });
+})();

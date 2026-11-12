@@ -202,3 +202,19 @@ p{margin:0 0 .8em;max-width:62ch}
 .form .ayuda{font-size:.88rem;color:var(--suave);margin:6px 0 0}
 .error{color:#9b2c1d;font-weight:700;font-size:.92rem}
 @media (max-width:620px){.form{grid-template-columns:1fr}}
+
+/* Panel de sol y clima */
+.vereda{background:var(--crema);border-radius:var(--radio);padding:18px 18px 16px}
+.vereda h3{font-size:1.05rem;margin-bottom:10px}
+.dia{position:relative;display:flex;height:34px;border-radius:999px;overflow:hidden;margin:6px 0 4px}
+.dia span{height:100%}
+.b-poco{background:#f3d98f}.b-medio{background:#f0bf45}.b-pleno{background:#e8a317}.b-bajando{background:#d98b3a}.b-cerros{background:#8c8f97}.b-noche{background:#3a3f55}
+.marca-hora{position:absolute;top:-4px;bottom:-4px;width:4px;margin-left:-2px;background:var(--carbon);border-radius:2px}
+.escala{display:flex;justify-content:space-between;font-size:.78rem;color:var(--suave)}
+.clima{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.clima div{background:#fff;border-radius:var(--radio);padding:10px 12px}
+.clima b{display:block;font-size:1.25rem}
+.clima small{color:var(--suave);font-size:.8rem}
+.consejo{margin:12px 0 0;font-weight:600}
+.fuente{font-size:.75rem;color:var(--suave);margin:8px 0 0}
+@media (max-width:520px){.clima{grid-template-columns:1fr 1fr}}
