@@ -107,7 +107,7 @@ def footer(lang):
 <img src="/img/logo-512.webp" alt="Andreas, Food and Drinks for Adventurers" width="84" height="84" loading="lazy">
 <div>
 <p><b>Andreas, Food &amp; Drinks for Adventurers</b><br>{e(N['direccion'])}<br>{t['pie_horario']}. {t['pie_hh']}.</p>
-<p><a href="https://wa.me/{N['whatsapp']}">WhatsApp {N['whatsapp_visible']}</a> · <a href="{N['instagram']}">Instagram @andreaselchalten</a></p>
+<p><a href="https://wa.me/{N['whatsapp']}">WhatsApp {N['whatsapp_visible']}</a> · <a href="{N['instagram']}">Instagram @andreaselchalten</a><br><a href="mailto:{N['mail']}">{N['mail']}</a></p>
 </div>
 <ul>{links}</ul>
 <p class="legal">{t['legal']}</p>
@@ -339,6 +339,7 @@ def agencias(lang):
 </table>
 <p style="margin-top:14px;color:var(--suave);font-size:.95rem">{'En las modalidades sin bebida, los pasajeros pueden comprarla en el local.' if es else 'For options without drinks, passengers can buy them at the restaurant.'}</p>
 <div class="acciones" style="margin-top:18px">{btn_wa('Pedir tarifas para agencias' if es else 'Request agency rates', ('Hola, vi la web de Andreas. Trabajo en una agencia y quiero recibir las tarifas para grupos.' if es else 'Hi, I saw the Andreas website. I work for an agency and would like your group rates.'))}</div>
+<p style="margin-top:12px;font-size:.95rem">{'O por mail:' if es else 'Or by email:'} <a href="mailto:{N['mail']}?subject={'Tarifas para agencias' if es else 'Agency rates'}">{N['mail']}</a></p>
 </div>
 <div>
 <h3>{'Platos a elegir' if es else 'Main course options'}</h3>

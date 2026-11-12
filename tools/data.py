@@ -5,6 +5,7 @@ y correr: python3 tools/build.py"""
 NEGOCIO = {
     "whatsapp": "5491127843427",
     "whatsapp_visible": "+54 9 11 2784-3427",
+    "mail": "administracion.andreasbar@gmail.com",
     "direccion": "San Martín 351, El Chaltén, Santa Cruz",
     "instagram": "https://instagram.com/andreaselchalten",
     "maps": "https://www.google.com/maps/search/?api=1&query=Andreas+Food+and+Drinks+San+Mart%C3%ADn+351+El+Chalt%C3%A9n",
