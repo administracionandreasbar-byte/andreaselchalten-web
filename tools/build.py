@@ -235,10 +235,11 @@ def inicio(lang):
 <tr><td>{'Todos los días' if es else 'Every day'}</td><td>{'12 a 24 h' if es else '12 pm – 12 am'}</td></tr>
 <tr><td>Happy Hour</td><td>{'16 a 20 h' if es else '4 – 8 pm'}</td></tr>
 </table>
-<p>{'Salón calefaccionado, mesas afuera y wifi.' if es else 'Heated dining room, outdoor tables and free wifi.'}</p>
+<p>{'Salón calefaccionado, patio con mesas afuera y wifi.' if es else 'Heated dining room, outdoor patio and free wifi.'}</p>
 <div class="acciones"><a class="btn btn-wa" href="{N['maps']}">{'Cómo llegar' if es else 'Get directions'}</a>{btn_wa('WhatsApp', t['wa_hola'], 'btn btn-linea')}</div>
 </div>
-<iframe class="mapa" src="{N['maps_embed']}" title="{'Mapa de Andreas en El Chaltén' if es else 'Map of Andreas in El Chaltén'}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<div class="ubic-fotos"><img class="arco-chico" src="/img/frente-patio-800.webp" alt="{'Frente de Andreas con el patio y la calle San Martín' if es else 'Andreas storefront with the patio and San Martín street'}" width="800" height="1067" loading="lazy">
+<iframe class="mapa" src="{N['maps_embed']}" title="{'Mapa de Andreas en El Chaltén' if es else 'Map of Andreas in El Chaltén'}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
 </div>
 </section>
 """
@@ -413,7 +414,7 @@ def reservas(lang):
 <div class="full"><button class="btn btn-wa" type="submit">{ICONO_WA}{'Enviar reserva por WhatsApp' if es else 'Send booking on WhatsApp'}</button></div>
 </form>
 <div>
-<img src="/img/burger-tehuelche-800.webp" alt="{'Hamburguesa Tehuelche con papas fritas' if es else 'Tehuelche burger with fries'}" width="800" height="1067" loading="lazy" style="aspect-ratio:4/3">
+<div class="arco-foto"><img src="/img/patio-cerro-800.webp" alt="{'El patio de Andreas al atardecer, con el cerro de fondo' if es else 'The Andreas patio at dusk, with the mountain behind'}" width="800" height="1067" loading="lazy"></div>
 <p style="margin-top:16px">{'¿Son más de 25 o vienen con una agencia?' if es else 'More than 25 people, or travelling with an agency?'} <a href="{RUTAS['agencias'][lang]}">{'Mirá la propuesta para grupos.' if es else 'See our group offer.'}</a></p>
 </div>
 </div></section>
