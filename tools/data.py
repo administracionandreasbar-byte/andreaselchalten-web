@@ -170,10 +170,10 @@ PLANO_PATIO = {"ancho": 850, "alto": 300}
 MESAS = [
     ("salon", "S1", "1", "rect", 70, 50, 170, 60, 4, True),
     ("salon", "S2", "2", "rect", 530, 50, 100, 60, 2, True),
-    ("salon", "S3", "3", "rect", 735, 50, 70, 130, 4, True),
+    ("salon", "S3", "3", "rect", 665, 50, 140, 60, 4, True),
     ("salon", "S4", "4", "rect", 360, 110, 100, 60, 2, True),
     ("salon", "S5", "5", "rect", 300, 230, 200, 70, 4, True),
-    ("salon", "S6", "6", "rect", 60, 190, 80, 140, 4, True),
+    ("salon", "S6", "6", "rect", 50, 220, 150, 70, 4, True),
     ("salon", "S7", "7", "rect", 735, 215, 70, 60, 2, True),
     ("salon", "S8", "8", "rect", 720, 305, 90, 150, 6, True),
     ("patio", "PA", "A", "circ", 80, 90, 34, 0, 2, True),
