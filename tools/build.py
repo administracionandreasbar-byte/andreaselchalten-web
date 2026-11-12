@@ -242,6 +242,11 @@ def inicio(lang):
     return h + footer(lang)
 
 # ---------------- MENÚ ----------------
+SVG_LLAMA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.5 2s.9 3.1-1.3 5.8C9.4 10 7 11.7 7 15.2A5 5 0 0 0 12 20a5 5 0 0 0 5-4.8c0-2.2-1.1-3.6-2-4.6.1 1.5-.5 2.7-1.6 3.1.3-2.8-.4-5.9-.9-11.7Z"/></svg>'
+SVG_HOJA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.5 3.5C11 3.6 5 7.6 5 14c0 1.5.4 2.8 1 3.9L3.5 20.5l1.1 1.1 2.6-2.6c1.1.6 2.4 1 3.8 1 6.4 0 10-6 9.5-16.5Zm-9.3 13.4-1.3-1.3c2.5-2.6 4.9-4.5 7.6-6.1-2.3 2-4.4 4.4-6.3 7.4Z"/></svg>'
+def icono(tipo, texto):
+    svg = SVG_LLAMA if tipo == "top" else SVG_HOJA
+    return f'<span class="ico ico-{tipo}" title="{texto}" role="img" aria-label="{texto}">{svg}</span>'
 def menu(lang):
     es = lang == "es"
     chips = "".join(f'<a href="#{sid}">{e(nes if es else nen)}</a>' for sid, nes, nen, *_ in MENU)
@@ -251,9 +256,9 @@ def menu(lang):
         for iid, n_es, n_en, d_es, d_en, p, tags in items:
             marcas = ""
             if iid in MAS_PEDIDOS:
-                marcas += f'<span class="marca-item m-top">{"Más pedida" if es else "Most ordered"}</span>'
+                marcas += icono("top", "Más pedida" if es else "Most ordered")
             if "veg" in tags:
-                marcas += f'<span class="marca-item m-veg">{"Vegetariana" if es else "Vegetarian"}</span>'
+                marcas += icono("veg", "Vegetariana" if es else "Vegetarian")
             d = d_es if es else d_en
             lis.append(f'<li class="item"><h3>{e(n_es if es else n_en)}{marcas}</h3><span class="precio">{precio(p, lang)}</span>{f"<p>{e(d)}</p>" if d else ""}</li>')
         nota = notaes if es else notaen
@@ -264,6 +269,7 @@ def menu(lang):
     h += f"""<section class="menu-hero"><div class="wrap">
 <h1>{'Menú' if es else 'Menu'}</h1>
 <p>{'Precios en pesos argentinos, actualizados en noviembre de 2026. Hamburguesas y sándwiches incluyen papas fritas.' if es else 'Prices in Argentine pesos, updated November 2026. Burgers and sandwiches come with fries.'}</p>
+<p class="leyenda">{icono("top", "Más pedida" if es else "Most ordered")} {'Más pedida' if es else 'Most ordered'} <span style="display:inline-block;width:18px"></span> {icono("veg", "Vegetariana" if es else "Vegetarian")} {'Vegetariana' if es else 'Vegetarian'}</p>
 </div></section>
 <nav class="chips" aria-label="{'Secciones del menú' if es else 'Menu sections'}"><div class="wrap">{chips}</div></nav>
 <div class="carta"><div class="wrap">

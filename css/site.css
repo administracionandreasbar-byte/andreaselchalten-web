@@ -163,7 +163,14 @@ p{margin:0 0 .8em;max-width:62ch}
 .item h3{font-size:1.05rem;}
 .item p{grid-column:1/-1;margin:0;color:var(--suave);font-size:.95rem}
 .marca-item{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:2px;}
-.m-top{background:var(--rojo);color:#fff}
+.ico{display:inline-flex;width:20px;height:20px;margin-left:6px;vertical-align:-3px}
+.ico svg{width:100%;height:100%}
+.ico-top{color:var(--rojo)}
+.ico-veg{color:#5b8a3c}
+.leyenda{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:.92rem}
+.leyenda .ico{margin-left:0;margin-right:4px}
+.menu-hero .ico-veg{color:#9cc77a}
+.menu-hero .ico-top{color:#ff6a55}
 .m-veg{background:var(--musgo);color:#fff}
 @media (max-width:760px){.items{grid-template-columns:1fr}.carta section{scroll-margin-top:160px}}
 .aviso{background:var(--crema);border-radius:var(--radio);padding:18px 20px;margin-top:40px;font-size:.95rem}
