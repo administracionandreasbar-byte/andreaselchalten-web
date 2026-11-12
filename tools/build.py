@@ -283,7 +283,7 @@ def menu(lang):
 def agencias(lang):
     es = lang == "es"
     t = T[lang]
-    filas = "".join(f'<tr><td><b>{e(a if es else b)}</b><br><span style="color:var(--suave)">{e(c if es else d)}</span></td><td class="precio">{precio(p, lang)}</td></tr>' for a, b, c, d, p in MENU_AGENCIAS)
+    filas = "".join(f'<tr><td><b>{e(a if es else b)}</b><br><span style="color:var(--suave)">{e(c if es else d)}</span></td></tr>' for a, b, c, d, p in MENU_AGENCIAS)
     platos = "".join(f"<li>{e(a if es else b)}</li>" for a, b in PLATOS_AGENCIAS)
     msg_empezar = ("Hola, vi la web de Andreas. Trabajo en una agencia y quiero empezar a trabajar con ustedes." if es else
                    "Hi, I saw the Andreas website. I work for an agency and would like to start working with you.")
@@ -304,7 +304,7 @@ def agencias(lang):
 <div class="wrap">
 <div>
 <h1>{'Tu grupo, servido en menos de 30 minutos.' if es else 'Your group, served in under 30 minutes.'}</h1>
-<p class="bajada">{'Menú cerrado para agencias, guías y transportes en el centro de El Chaltén. Precio fijo por persona, para que le sumes tu margen.' if es else 'Set menus for agencies, guides and transport companies in the centre of El Chaltén. A fixed price per person, so you can add your own margin.'}</p>
+<p class="bajada">{'Menú cerrado para agencias, guías y transportes en el centro de El Chaltén. Tarifas preferenciales por persona, pensadas para que tu empresa sume su margen.' if es else 'Set menus for agencies, guides and transport companies in the centre of El Chaltén. Preferential per-person rates, designed so your company can add its own margin.'}</p>
 <div class="acciones">
 {btn_wa('Empezar a trabajar juntos' if es else 'Start working with us', msg_empezar)}
 <a class="btn btn-linea" href="#reservar-grupo">{'Reservar un grupo' if es else 'Book a group'}</a>
@@ -328,17 +328,19 @@ def agencias(lang):
 <section class="seccion alt">
 <div class="wrap dividido" style="align-items:start">
 <div>
-<h2>{'Menús por persona' if es else 'Menus per person'}</h2>
+<h2>{'Menús para grupos' if es else 'Group menus'}</h2>
+<p style="margin-top:12px">{'Trabajamos con tarifas preferenciales para agencias, guías y transportes. Pedilas por WhatsApp y te las enviamos con las condiciones.' if es else 'We offer preferential rates for agencies, guides and transport companies. Ask on WhatsApp and we send them with our terms.'}</p>
 <table class="tarifas" style="margin-top:20px">
-<thead><tr><th>{'Modalidad' if es else 'Option'}</th><th>{'Por persona' if es else 'Per person'}</th></tr></thead>
+<thead><tr><th>{'Modalidad' if es else 'Option'}</th></tr></thead>
 <tbody>{filas}</tbody>
 </table>
 <p style="margin-top:14px;color:var(--suave);font-size:.95rem">{'En las modalidades sin bebida, los pasajeros pueden comprarla en el local.' if es else 'For options without drinks, passengers can buy them at the restaurant.'}</p>
+<div class="acciones" style="margin-top:18px">{btn_wa('Pedir tarifas para agencias' if es else 'Request agency rates', ('Hola, vi la web de Andreas. Trabajo en una agencia y quiero recibir las tarifas para grupos.' if es else 'Hi, I saw the Andreas website. I work for an agency and would like your group rates.'))}</div>
 </div>
 <div>
 <h3>{'Platos a elegir' if es else 'Main course options'}</h3>
 <ul class="lista" style="margin-top:12px">{platos}</ul>
-<h3 style="margin-top:28px">{'Viandas para la excursión' if es else 'Packed lunches'} <span class="precio">{precio(VIANDA[0], lang)}</span></h3>
+<h3 style="margin-top:28px">{'Viandas para la excursión' if es else 'Packed lunches'}</h3>
 <p style="margin-top:8px">{e(VIANDA[1] if es else VIANDA[2])} {'Listas a la hora que nos digas.' if es else 'Ready at the time you set.'}</p>
 </div>
 </div>
@@ -368,8 +370,8 @@ def agencias(lang):
 def form_grupo(lang):
     es = lang == "es"
     intro = "Hola, vi la web de Andreas y quiero reservar un grupo." if es else "Hi, I saw the Andreas website and want to book a group."
-    opciones = "".join(f'<option>{e(a if es else b)} ({precio(p, lang)})</option>' for a, b, c, d, p in MENU_AGENCIAS)
-    opciones += f'<option>{"Viandas" if es else "Packed lunches"} ({precio(VIANDA[0], lang)})</option>'
+    opciones = "".join(f'<option>{e(a if es else b)}</option>' for a, b, c, d, p in MENU_AGENCIAS)
+    opciones += f'<option>{"Viandas" if es else "Packed lunches"}</option>'
     return f"""<form class="form" data-wa="{e(intro)}" novalidate style="margin-top:24px">
 <div class="full"><label for="g-agencia">{'Agencia o guía' if es else 'Agency or guide'}</label><input id="g-agencia" required data-etiqueta="{'Agencia' if es else 'Agency'}" autocomplete="organization"></div>
 <div><label for="g-fecha">{'Fecha' if es else 'Date'}</label><input id="g-fecha" type="date" required data-etiqueta="{'Fecha' if es else 'Date'}"></div>
