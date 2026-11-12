@@ -1,0 +1,20 @@
+{
+ "name": "Andreas – Food & Drinks for Adventurers",
+ "short_name": "Andreas",
+ "start_url": "/",
+ "display": "standalone",
+ "background_color": "#f8f9f0",
+ "theme_color": "#211f20",
+ "icons": [
+  {
+   "src": "/img/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "/img/logo-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}
