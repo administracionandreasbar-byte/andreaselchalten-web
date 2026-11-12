@@ -215,7 +215,7 @@ def inicio(lang):
 </section>
 <section class="seccion">
 <div class="wrap dividido">
-<img src="/img/napolitana-salon-800.webp" alt="{'Milanesa napolitana con ensalada en el salón de noche' if es else 'Milanesa napolitana with salad in the dining room at night'}" width="800" height="1067" loading="lazy">
+<img style="object-position:50% 88%" src="/img/napolitana-salon-800.webp" alt="{'Milanesa napolitana con ensalada en el salón de noche' if es else 'Milanesa napolitana with salad in the dining room at night'}" width="800" height="1067" loading="lazy">
 <div>
 <h2>{'Grupos, agencias y guías' if es else 'Groups, agencies and guides'}</h2>
 <p style="margin-top:14px">{'Recibimos grupos de hasta 25 personas con menú cerrado, servido en menos de 30 minutos. Guía y chofer no pagan, emitimos factura A y coordinamos todo por escrito.' if es else 'We host groups of up to 25 people with a set menu, served in under 30 minutes. Guides and drivers eat free, we issue invoices and confirm everything in writing.'}</p>
