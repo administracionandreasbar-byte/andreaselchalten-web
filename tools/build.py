@@ -6,7 +6,7 @@ from data import NEGOCIO as N, MENU, MAS_PEDIDOS, RESENAS, MENU_AGENCIAS, PLATOS
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOMINIO = "https://andreaselchalten.com"
-INDEXAR = False  # pasar a True cuando los dueños aprueben la publicación
+INDEXAR = True  # pasar a True cuando los dueños aprueben la publicación
 
 RUTAS = {
     "inicio":   {"es": "/", "en": "/en/"},
