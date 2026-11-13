@@ -167,7 +167,7 @@ def inicio(lang):
     desc = ("Restaurante en El Chaltén para después del sendero: hamburguesas, milanesas, pizzas, pastas y bife, con cerveza artesanal tirada. Todos los días de 12 a 24 h." if es else
             "Restaurant in El Chaltén for after the trail: burgers, milanesas, pizza, pasta and steak, with craft beer on tap. Open daily, noon to midnight.")
     h = head(lang, "inicio", titulo, desc) + header(lang, "inicio")
-    h += f"""<section class="portada">
+    h += f"""<section class="portada" id="arriba">
 <img class="portada-foto" src="/img/salon-sandwich-1400.webp" srcset="/img/salon-sandwich-800.webp 800w, /img/salon-sandwich-1400.webp 1400w" sizes="100vw" alt="{'Sandwich del Puestero con papas en el salón de Andreas, con la calle San Martín de fondo' if es else 'Puestero sandwich with fries in the Andreas dining room, San Martín street behind'}" width="1400" height="1867" fetchpriority="high">
 <div class="wrap portada-texto">
 <p class="estado" data-estado><i></i><span>{'Todos los días de 12 a 24 h' if es else 'Open daily, noon to midnight'}</span></p>
@@ -187,7 +187,7 @@ def inicio(lang):
 <a class="cartel" href="{N['maps']}"><small>{'Cómo llegar' if es else 'Directions'}</small><strong>San Martín 351</strong></a>
 </div>
 </nav>
-<section class="seccion mesa">
+<section class="seccion mesa" id="platos">
 <div class="wrap">
 <div class="cabeza">
 <div><h2>{'Lo que más sale' if es else 'What people order'}</h2>
@@ -205,7 +205,7 @@ def inicio(lang):
 <img class="hh-plato" src="/img/plato-milanesa-sm.webp" alt="" width="320" height="320" loading="lazy">
 </div>
 </section>
-<section class="seccion">
+<section class="seccion" id="resenas">
 <div class="wrap">
 <div class="cabeza">
 <div><h2>{'Lo dicen los que bajaron del cerro' if es else 'From people who just came down the mountain'}</h2>
@@ -215,7 +215,7 @@ def inicio(lang):
 {resenas_html(lang, [0,1,2,3,4,5,6,7])}
 </div>
 </section>
-<section class="seccion grupos">
+<section class="seccion grupos" id="grupos">
 {cresta('#211f20','arriba')}
 <div class="wrap dividido">
 <div class="arco-foto"><img style="object-position:50% 88%" src="/img/napolitana-salon-800.webp" alt="{'Milanesa napolitana con ensalada en el salón de noche' if es else 'Milanesa napolitana with salad in the dining room at night'}" width="800" height="1067" loading="lazy"></div>
@@ -241,6 +241,18 @@ def inicio(lang):
 <iframe class="mapa" src="{N['maps_embed']}" title="{'Mapa de Andreas en El Chaltén' if es else 'Map of Andreas in El Chaltén'}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>
 </section>
+<nav class="indice" aria-label="{'En esta página' if es else 'On this page'}" data-indice>
+<button type="button" class="indice-boton" aria-expanded="false" data-indice-boton><span aria-hidden="true">☰</span> {'Índice' if es else 'Contents'}</button>
+<ol>
+<li><a href="#arriba">{'Inicio' if es else 'Top'}</a></li>
+<li><a href="#platos">{'Lo que más sale' if es else 'Popular dishes'}</a></li>
+<li><a href="#happy-hour">Happy Hour</a></li>
+<li><a href="#resenas">{'Reseñas' if es else 'Reviews'}</a></li>
+<li><a href="#grupos">{'Grupos y agencias' if es else 'Groups'}</a></li>
+<li><a href="#ubicacion">{'Cómo llegar' if es else 'Find us'}</a></li>
+<li class="indice-cta"><a href="{RUTAS['reservas'][lang]}">{'Reservar mesa' if es else 'Book a table'}</a></li>
+</ol>
+</nav>
 """
     return h + footer(lang)
 

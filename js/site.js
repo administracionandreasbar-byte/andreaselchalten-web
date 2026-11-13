@@ -199,3 +199,25 @@
   }
   [fecha, hora].forEach(function (el) { el.addEventListener('change', function () { pedirClima(); dibujar(); }); el.addEventListener('input', dibujar); });
 })();
+
+// Índice flotante
+(function () {
+  var nav = document.querySelector('[data-indice]');
+  if (!nav) return;
+  var boton = nav.querySelector('[data-indice-boton]');
+  boton.addEventListener('click', function () {
+    var a = nav.classList.toggle('abierto'); boton.setAttribute('aria-expanded', a);
+  });
+  nav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { nav.classList.remove('abierto'); boton.setAttribute('aria-expanded', 'false'); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { nav.classList.remove('abierto'); boton.setAttribute('aria-expanded', 'false'); } });
+  if (!('IntersectionObserver' in window)) return;
+  var links = {};
+  nav.querySelectorAll('a[href^="#"]').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  var obs = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      Object.keys(links).forEach(function (k) { links[k].classList.toggle('activo', k === e.target.id); });
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) obs.observe(s); });
+})();
