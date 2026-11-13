@@ -242,14 +242,13 @@ def inicio(lang):
 </div>
 </section>
 <nav class="indice" aria-label="{'En esta página' if es else 'On this page'}" data-indice>
-<button type="button" class="indice-boton" aria-expanded="false" data-indice-boton><span aria-hidden="true">☰</span> {'Índice' if es else 'Contents'}</button>
 <ol>
-<li><a href="#arriba">{'Inicio' if es else 'Top'}</a></li>
-<li><a href="#platos">{'Lo que más sale' if es else 'Popular dishes'}</a></li>
-<li><a href="#happy-hour">Happy Hour</a></li>
-<li><a href="#resenas">{'Reseñas' if es else 'Reviews'}</a></li>
-<li><a href="#grupos">{'Grupos y agencias' if es else 'Groups'}</a></li>
-<li><a href="#ubicacion">{'Cómo llegar' if es else 'Find us'}</a></li>
+<li><a href="#arriba"><span>{'Inicio' if es else 'Top'}</span></a></li>
+<li><a href="#platos"><span>{'Lo que más sale' if es else 'Popular dishes'}</span></a></li>
+<li><a href="#happy-hour"><span>Happy Hour</span></a></li>
+<li><a href="#resenas"><span>{'Reseñas' if es else 'Reviews'}</span></a></li>
+<li><a href="#grupos"><span>{'Grupos y agencias' if es else 'Groups'}</span></a></li>
+<li><a href="#ubicacion"><span>{'Cómo llegar' if es else 'Find us'}</span></a></li>
 <li class="indice-cta"><a href="{RUTAS['reservas'][lang]}">{'Reservar mesa' if es else 'Book a table'}</a></li>
 </ol>
 </nav>

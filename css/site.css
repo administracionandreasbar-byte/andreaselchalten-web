@@ -349,20 +349,21 @@ p{margin:0 0 .8em;max-width:62ch}
   .portada h1{max-width:11ch}
 }
 
-/* Índice flotante */
-.indice{position:fixed;z-index:30;right:20px;top:50%;transform:translateY(-50%)}
+/* Índice flotante: aparece a la izquierda mientras se scrollea y se va al parar */
+.indice{position:fixed;z-index:30;left:16px;top:50%;transform:translate(-12px,-50%);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease}
+.indice.visible,.indice:hover,.indice:focus-within{opacity:1;transform:translate(0,-50%);pointer-events:auto}
 .indice-boton{display:none}
-.indice ol{list-style:none;margin:0;padding:10px;background:rgba(248,249,240,.94);backdrop-filter:blur(6px);border-radius:18px;box-shadow:0 10px 30px rgba(33,31,32,.18);display:grid;gap:2px}
-.indice a{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:.86rem;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--suave)}
+.indice ol{list-style:none;margin:0;padding:10px;background:rgba(248,249,240,.95);backdrop-filter:blur(6px);border-radius:18px;box-shadow:0 10px 30px rgba(33,31,32,.2);display:grid;gap:2px}
+.indice a{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:.86rem;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--suave);white-space:nowrap}
 .indice a::before{content:"";width:8px;height:8px;border-radius:50%;background:#c9c3b8;flex-shrink:0}
 .indice a:hover{background:var(--crema);color:var(--carbon)}
 .indice a.activo{color:var(--carbon)}
 .indice a.activo::before{background:var(--rojo);box-shadow:0 0 0 3px rgba(200,50,42,.2)}
 .indice .indice-cta a{background:var(--rojo);color:#fff;margin-top:4px;justify-content:center}
 .indice .indice-cta a::before{display:none}
-@media (max-width:1520px){
-  .indice{top:auto;bottom:16px;right:16px;transform:none}
-  .indice-boton{display:inline-flex;gap:8px;align-items:center;border:0;font:inherit;font-weight:700;background:var(--carbon);color:var(--crema);padding:12px 18px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer}
-  .indice ol{display:none;position:absolute;right:0;bottom:56px;min-width:220px}
-  .indice.abierto ol{display:grid}
+@media (max-width:760px){
+  .indice{left:8px}
+  .indice ol{padding:6px}
+  .indice a{font-size:.78rem;padding:6px 8px;gap:8px}
+  .indice a:not(.activo) span{display:none}
 }

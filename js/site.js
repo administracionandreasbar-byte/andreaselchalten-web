@@ -200,16 +200,17 @@
   [fecha, hora].forEach(function (el) { el.addEventListener('change', function () { pedirClima(); dibujar(); }); el.addEventListener('input', dibujar); });
 })();
 
-// Índice flotante
+// Índice flotante: se muestra mientras se scrollea y se esconde al parar
 (function () {
   var nav = document.querySelector('[data-indice]');
   if (!nav) return;
-  var boton = nav.querySelector('[data-indice-boton]');
-  boton.addEventListener('click', function () {
-    var a = nav.classList.toggle('abierto'); boton.setAttribute('aria-expanded', a);
-  });
-  nav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { nav.classList.remove('abierto'); boton.setAttribute('aria-expanded', 'false'); }); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { nav.classList.remove('abierto'); boton.setAttribute('aria-expanded', 'false'); } });
+  var t, inicio = document.getElementById('arriba');
+  window.addEventListener('scroll', function () {
+    var arriba = inicio && window.scrollY < inicio.offsetHeight * 0.6;
+    nav.classList.toggle('visible', !arriba);
+    clearTimeout(t);
+    t = setTimeout(function () { nav.classList.remove('visible'); }, 1200);
+  }, { passive: true });
   if (!('IntersectionObserver' in window)) return;
   var links = {};
   nav.querySelectorAll('a[href^="#"]').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
