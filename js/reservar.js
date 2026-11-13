@@ -109,7 +109,7 @@
     if (sinSistema) return ofrecerWA();
     boton.disabled = true; boton.textContent = T.enviando;
     fetch('/api/reservas', { method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ mesa: elegida.id, fecha: fecha.value, hora: hora.value, personas: +pax.value, nombre: $('#r-nombre').value.trim(), email: $('#r-email').value.trim(), lang: en ? 'en' : 'es' })
+      body: JSON.stringify({ mesa: elegida.id, fecha: fecha.value, hora: hora.value, personas: +pax.value, nombre: $('#r-nombre').value.trim(), email: $('#r-email').value.trim(), lang: en ? 'en' : 'es', origen: (function () { try { return sessionStorage.getItem('origen') || ''; } catch (e) { return ''; } })() })
     }).then(function (r) { return r.json().then(function (d) { return { st: r.status, d: d }; }, function () { return { st: r.status, d: {} }; }); })
       .then(function (res) {
         boton.disabled = false; boton.textContent = en ? 'Book' : 'Reservar';

@@ -13,6 +13,7 @@ RUTAS = {
     "menu":     {"es": "/menu/", "en": "/en/menu/"},
     "agencias": {"es": "/agencias/", "en": "/en/agencies/"},
     "reservas": {"es": "/reservas/", "en": "/en/reservations/"},
+    "socios":   {"es": "/socios/", "en": "/en/partners/"},
 }
 e = html.escape
 
@@ -101,6 +102,7 @@ def header(lang, pagina):
 def footer(lang):
     t = T[lang]
     links = "".join(f'<li><a href="{RUTAS[k][lang]}">{e(v)}</a></li>' for k, v in t["nav"])
+    links += f'<li><a href="{RUTAS["socios"][lang]}">{"Socios: hoteles y agencias" if lang == "es" else "Partners: hotels and agencies"}</a></li>'
     return f"""</main>
 <footer class="pie">
 <div class="wrap">
@@ -374,10 +376,19 @@ def agencias(lang):
 {resenas_html(lang, [3,5,2,7])}
 </div>
 </section>
+<section class="seccion socios-cta">
+<div class="wrap dividido" style="align-items:center">
+<div>
+<h2>{'Registrate como socio y reservá con tu link' if es else 'Sign up as a partner and book with your own link'}</h2>
+<p style="margin-top:12px">{'Hoteles, hostels, agencias, guías y transportes: te registrás una vez y recibís un link propio. Cada mesa o grupo que reserves o recomiendes con ese link queda a tu nombre.' if es else 'Hotels, hostels, agencies, guides and transport companies: sign up once and get your own link. Every table or group you book or recommend with it is recorded under your name.'}</p>
+</div>
+<div class="acciones"><a class="btn btn-wa" href="{RUTAS['socios'][lang]}">{'Quiero mi link de socio' if es else 'Get my partner link'}</a></div>
+</div>
+</section>
 <section class="seccion" id="reservar-grupo">
 <div class="wrap">
 <h2>{'Reservar un grupo' if es else 'Book a group'}</h2>
-<p style="margin-top:12px">{'Completá los datos y te llega todo armado a nuestro WhatsApp. Te confirmamos por escrito.' if es else 'Fill in the details and they arrive ready on our WhatsApp. We confirm in writing.'}</p>
+<p style="margin-top:12px">{'Completá los datos: queda registrado en nuestro sistema y se abre WhatsApp para que lo envíes. Te confirmamos por escrito.' if es else 'Fill in the details: the request is saved in our system and WhatsApp opens so you can send it. We confirm in writing.'}</p>
 {form_grupo(lang)}
 </div>
 </section>
@@ -389,7 +400,7 @@ def form_grupo(lang):
     intro = "Hola, vi la web de Andreas y quiero reservar un grupo." if es else "Hi, I saw the Andreas website and want to book a group."
     opciones = "".join(f'<option>{e(a if es else b)}</option>' for a, b, c, d, p in MENU_AGENCIAS)
     opciones += f'<option>{"Viandas" if es else "Packed lunches"}</option>'
-    return f"""<form class="form" data-wa="{e(intro)}" novalidate style="margin-top:24px">
+    return f"""<form class="form" data-wa="{e(intro)}" data-api="grupo" novalidate style="margin-top:24px">
 <div class="full"><label for="g-agencia">{'Agencia o guía' if es else 'Agency or guide'}</label><input id="g-agencia" required data-etiqueta="{'Agencia' if es else 'Agency'}" autocomplete="organization"></div>
 <div><label for="g-fecha">{'Fecha' if es else 'Date'}</label><input id="g-fecha" type="date" required data-etiqueta="{'Fecha' if es else 'Date'}"></div>
 <div><label for="g-hora">{'Llegada estimada' if es else 'Estimated arrival'}</label><input id="g-hora" type="time" required data-etiqueta="{'Hora' if es else 'Time'}"></div>
@@ -499,6 +510,44 @@ def reservas(lang):
 """
     return h + footer(lang)
 
+# ---------------- SOCIOS ----------------
+def socios(lang):
+    es = lang == "es"
+    titulo = "Socios: hoteles, hostels y agencias | Andreas, El Chaltén" if es else "Partners: hotels, hostels and agencies | Andreas, El Chaltén"
+    desc = ("Registrá tu hotel, hostel, agencia o servicio de guías y recibí un link propio para reservar en Andreas, El Chaltén." if es else
+            "Register your hotel, hostel, agency or guiding service and get your own link to book at Andreas, El Chaltén.")
+    tipos = [("Alojamiento", "Hotel, hostel u hostería" if es else "Hotel, hostel or lodge"), ("Agencia", "Agencia de turismo" if es else "Travel agency"),
+             ("Guía particular", "Guía de montaña" if es else "Mountain guide"), ("Transporte", "Transporte o transfer" if es else "Transport or transfer"),
+             ("Otro", "Otro" if es else "Other")]
+    opciones = "".join(f'<option value="{v}">{e(t)}</option>' for v, t in tipos)
+    pasos = [("Registrate", "Un minuto, una sola vez."), ("Guardá tu link", "Compartilo con tus huéspedes o pasajeros."), ("Reservá con tu link", "Cada mesa o grupo queda a tu nombre.")] if es else \
+            [("Sign up", "One minute, just once."), ("Save your link", "Share it with your guests or passengers."), ("Book with your link", "Every table or group is recorded under your name.")]
+    pasos_html = "".join(f"<li><b>{e(a)}</b><span>{e(b)}</span></li>" for a, b in pasos)
+    h = head(lang, "socios", titulo, desc) + header(lang, "socios")
+    h += f"""<section class="menu-hero"><div class="wrap">
+<h1>{'Tu link de socio' if es else 'Your partner link'}</h1>
+<p>{'Para hoteles, hostels, agencias, guías y transportes de El Chaltén. Lo que reserves o recomiendes con tu link queda registrado a tu nombre, y coordinamos con vos los beneficios para tus huéspedes y tu equipo.' if es else 'For hotels, hostels, agencies, guides and transport companies in El Chaltén. Everything you book or recommend with your link is recorded under your name, and we agree with you on perks for your guests and team.'}</p>
+</div></section>
+<section class="seccion" data-socios data-lang="{lang}">
+<div class="wrap">
+<ol class="pasos">{pasos_html}</ol>
+<form class="form" novalidate data-alta style="margin-top:32px">
+<div class="full"><label for="s-negocio">{'Nombre del negocio' if es else 'Business name'}</label><input id="s-negocio" required autocomplete="organization"></div>
+<div><label for="s-tipo">{'Tipo' if es else 'Type'}</label><select id="s-tipo" required><option value="">{'Elegí una opción' if es else 'Choose an option'}</option>{opciones}</select></div>
+<div><label for="s-contacto">{'Tu nombre' if es else 'Your name'}</label><input id="s-contacto" required autocomplete="name"></div>
+<div><label for="s-tel">WhatsApp</label><input id="s-tel" type="tel" required inputmode="tel" autocomplete="tel" placeholder="+54 9 2966 …"></div>
+<div><label for="s-correo">{'Correo (opcional)' if es else 'Email (optional)'}</label><input id="s-correo" type="email" autocomplete="email"></div>
+<label class="check full"><input id="s-ok" type="checkbox" required> <span>{'Acepto que Andreas use estos datos solo para gestionar reservas y la relación comercial (ley 25.326).' if es else 'I agree that Andreas will use this information only to manage bookings and our business relationship.'}</span></label>
+<p class="error full" hidden role="alert" data-error></p>
+<div class="full"><button class="btn btn-wa" type="submit" data-enviar>{'Crear mi link' if es else 'Create my link'}</button></div>
+</form>
+<div class="socio-listo" data-listo hidden tabindex="-1"></div>
+</div>
+</section>
+<script src="/js/socios.js" defer></script>
+"""
+    return h + footer(lang)
+
 def escribir(ruta, contenido):
     destino = os.path.join(RAIZ, ruta.strip("/"), "index.html") if ruta != "/" else os.path.join(RAIZ, "index.html")
     os.makedirs(os.path.dirname(destino), exist_ok=True)
@@ -510,6 +559,7 @@ for lang in ("es", "en"):
     escribir(RUTAS["menu"][lang], menu(lang))
     escribir(RUTAS["agencias"][lang], agencias(lang))
     escribir(RUTAS["reservas"][lang], reservas(lang))
+    escribir(RUTAS["socios"][lang], socios(lang))
 
 manifest = {"name": "Andreas – Food & Drinks for Adventurers", "short_name": "Andreas", "start_url": "/", "display": "standalone",
             "background_color": "#f8f9f0", "theme_color": "#211f20",

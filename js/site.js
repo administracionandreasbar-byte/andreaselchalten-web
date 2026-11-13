@@ -83,7 +83,18 @@
         }
         lineas.push(campo.dataset.etiqueta + ': ' + v);
       });
-      window.location.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(lineas.join('\n'));
+      var abrir = function () { window.location.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(lineas.join('\n')); };
+      if (form.dataset.api === 'grupo') {
+        // Se guarda en el CRM y después se abre WhatsApp (si el sistema no responde en 2,5 s, igual se abre)
+        var v = function (id) { var c = form.querySelector('#' + id); return c ? c.value.trim() : ''; };
+        var hecho = false, seguir = function () { if (!hecho) { hecho = true; abrir(); } };
+        setTimeout(seguir, 2500);
+        fetch('/api/grupo', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ agencia: v('g-agencia'), fecha: v('g-fecha'), hora: v('g-hora'), personas: v('g-pax'), menu: v('g-menu'), notas: v('g-notas'), origen: ORIGEN, lang: lang }) })
+          .then(seguir, seguir);
+        return;
+      }
+      abrir();
     });
   });
 })();
