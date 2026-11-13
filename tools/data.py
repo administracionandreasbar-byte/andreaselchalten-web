@@ -166,21 +166,23 @@ VIANDA = (16000,
 # Plano de mesas (borrador del 12/11, a confirmar con Álvaro).
 # zona, id, etiqueta, forma (rect/circ), x, y, ancho, alto (o radio), capacidad, reservable
 PLANO_SALON = {"ancho": 850, "alto": 470}
-PLANO_PATIO = {"ancho": 850, "alto": 300}
+PLANO_PATIO = {"ancho": 700, "alto": 440}
 MESAS = [
-    ("salon", "S1", "1", "rect", 70, 50, 170, 60, 4, True),
-    ("salon", "S2", "2", "rect", 530, 50, 100, 60, 2, True),
+    # Salón: mesas dobles (2 individuales juntas) 140x60 para 4; individuales 70x60 para 2
+    ("salon", "S1", "1", "rect", 70, 50, 140, 60, 4, True),
+    ("salon", "S2", "2", "rect", 560, 50, 70, 60, 2, True),
     ("salon", "S3", "3", "rect", 665, 50, 140, 60, 4, True),
-    ("salon", "S4", "4", "rect", 360, 110, 100, 60, 2, True),
-    ("salon", "S5", "5", "rect", 300, 230, 200, 70, 4, True),
-    ("salon", "S6", "6", "rect", 50, 220, 150, 70, 4, True),
-    ("salon", "S7", "7", "rect", 735, 215, 70, 60, 2, True),
-    ("salon", "S8", "8", "rect", 720, 305, 90, 150, 6, True),
-    ("patio", "PA", "A", "circ", 80, 90, 34, 0, 2, True),
-    ("patio", "P1", "9", "circ", 200, 150, 26, 0, 2, True),
-    ("patio", "P2", "10", "circ", 320, 110, 26, 0, 2, True),
-    ("patio", "P3", "11", "circ", 440, 150, 26, 0, 2, True),
-    ("patio", "P4", "12", "circ", 560, 110, 26, 0, 2, True),
-    ("patio", "PB", "B", "circ", 420, 230, 34, 0, 2, True),
-    ("patio", "PC", "C", "rect", 660, 60, 70, 190, 6, True),
+    ("salon", "S4", "4", "rect", 300, 95, 70, 60, 2, True),
+    ("salon", "S5", "5", "rect", 425, 175, 140, 60, 4, True),
+    ("salon", "S6", "6", "rect", 60, 230, 140, 60, 4, True),
+    ("salon", "S7", "7", "rect", 700, 175, 70, 60, 2, True),
+    ("salon", "S8", "8", "rect", 695, 262, 70, 190, 6, True),
+    # Patio: A y B son mesitas ratonas con dos sillones; 9 a 12 redondas para 2; C barra alta igual a la 8
+    ("patio", "PA", "A", "lounge-pared", 350, 78, 15, 0, 2, True),
+    ("patio", "P1", "9", "circ", 110, 210, 26, 0, 2, True),
+    ("patio", "P2", "10", "circ", 230, 150, 26, 0, 2, True),
+    ("patio", "P3", "11", "circ", 350, 210, 26, 0, 2, True),
+    ("patio", "P4", "12", "circ", 470, 250, 26, 0, 2, True),
+    ("patio", "PB", "B", "lounge-calle", 470, 378, 15, 0, 2, True),
+    ("patio", "PC", "C", "rect", 540, 120, 70, 190, 6, True),
 ]

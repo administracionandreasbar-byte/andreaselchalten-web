@@ -333,3 +333,9 @@ p{margin:0 0 .8em;max-width:62ch}
 .listo{outline:none}
 .listo-titulo{font-size:1.6rem;font-weight:800;color:var(--musgo);margin-bottom:6px}
 @media (max-width:860px){.ficha{position:static}}
+
+.plano .hotel{fill:#e9d9a6}
+.mesa .sillon{fill:var(--rojo);stroke:#7d1a14;stroke-width:2}
+.mesa .hilos{stroke:rgba(255,255,255,.55);stroke-width:1.2;fill:none}
+.mesa .num.chico{font-size:15px}
+.mesa.ocupada .sillon{fill:#cfcac2;stroke:#aaa}

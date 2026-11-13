@@ -400,18 +400,32 @@ def plano_svg(zona, lang):
                  f'<text x="425" y="34" class="ref" text-anchor="middle">{"Entrada" if es else "Entrance"}</text>'
                  f'<text x="175" y="34" class="ref" text-anchor="middle">{"Ventana a la calle" if es else "Street window"}</text>'
                  f'<rect x="30" y="400" width="200" height="44" rx="8" class="meson"/><text x="130" y="427" class="ref" text-anchor="middle">{"Barra" if es else "Bar"}</text>'
-                 f'<rect x="{W-14}" y="200" width="8" height="250" class="chapa"/><rect x="6" y="150" width="8" height="220" class="pared"/>')
+                 f'<rect x="{W-14}" y="200" width="8" height="250" class="chapa"/><rect x="2" y="10" width="10" height="170" rx="5" class="vidrio"/><rect x="6" y="190" width="8" height="190" class="pared"/>')
     else:
         fondo = (f'<rect x="8" y="8" width="{W-16}" height="{H-16}" rx="14" class="piso-patio"/>'
-                 f'<rect x="8" y="8" width="600" height="14" rx="4" class="fachada"/>'
-                 f'<text x="300" y="44" class="ref" text-anchor="middle">{"Frente del local" if es else "Restaurant front"}</text>'
-                 f'<rect x="8" y="{H-20}" width="{W-16}" height="12" rx="4" class="baranda"/>'
-                 f'<text x="300" y="{H-28}" class="ref" text-anchor="middle">{"Baranda y calle San Martín" if es else "Railing and San Martín street"}</text>')
+                 f'<rect x="8" y="8" width="{W-80}" height="16" rx="4" class="fachada"/>'
+                 f'<rect x="{W-66}" y="8" width="58" height="{H-16}" rx="6" class="hotel"/>'
+                 f'<text x="{W-37}" y="{H/2}" class="ref" text-anchor="middle" transform="rotate(-90 {W-37} {H/2})">Hotel</text>'
+                 f'<text x="{(W-80)/2}" y="46" class="ref" text-anchor="middle">{"Frente del local" if es else "Restaurant front"}</text>'
+                 f'<rect x="8" y="{H-20}" width="{W-80}" height="12" rx="4" class="baranda"/>'
+                 f'<text x="230" y="{H-30}" class="ref" text-anchor="middle">{"Baranda y calle San Martín" if es else "Railing and San Martín street"}</text>')
     mesas = []
     for z, mid, lab, forma, x, y, w, h, cap, res in MESAS:
         if z != zona:
             continue
         nombre = (f"Mesa {lab}, para {cap}" if es else f"Table {lab}, seats {cap}")
+        if forma.startswith("lounge"):
+            def sillon(cx, cy, ang):
+                return (f'<g transform="translate({cx} {cy}) rotate({ang})"><ellipse rx="19" ry="23" class="sillon"/>'
+                        f'<path d="M-15 -8 L15 -8 M-17 0 L17 0 M-15 8 L15 8 M-9 -18 L-9 18 M0 -22 L0 22 M9 -18 L9 18" class="hilos"/></g>')
+            if forma == "lounge-pared":
+                sillas = sillon(x - 44, y + 6, 90) + sillon(x + 44, y + 6, -90)
+            else:
+                sillas = sillon(x - 34, y - 34, 155) + sillon(x + 34, y - 34, 205)
+            figura = f'<circle cx="{x}" cy="{y}" r="{w}" class="tabla ratona"/>'
+            tx, ty = x, y + 6
+            mesas.append(f'<g class="mesa" data-id="{mid}" data-cap="{cap}" data-zona="{zona}" data-label="{lab}" tabindex="0" role="button" aria-pressed="false" aria-label="{nombre}{" (mesita con sillones)" if es else " (lounge chairs)"}">{sillas}{figura}<text x="{tx}" y="{ty}" text-anchor="middle" class="num chico">{lab}</text></g>')
+            continue
         if forma == "circ":
             sillas = "".join(f'<circle cx="{x+ (w+12)*dx}" cy="{y+(w+12)*dy}" r="9" class="silla"/>' for dx, dy in ((-1, 0), (1, 0)))
             figura = f'<circle cx="{x}" cy="{y}" r="{w}" class="tabla"/>'
