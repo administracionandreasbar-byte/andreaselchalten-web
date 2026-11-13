@@ -148,8 +148,7 @@ RESENAS = [
 
 # Menús para agencias (propuesta de octubre 2026). Precios a confirmar por los dueños.
 MENU_AGENCIAS = [
-    ("Menú simple", "Simple menu", "Plato principal.", "Main course.", 24000),
-    ("Menú con postre", "Menu with dessert", "Plato principal y flan casero.", "Main course and homemade flan.", 28000),
+    ("Menú con postre", "Menu with dessert", "Plato principal y flan casero. La bebida, el pasajero puede comprarla en el local.", "Main course and homemade flan. Passengers can buy drinks at the restaurant.", 28000),
     ("Menú completo", "Full menu", "Plato principal, flan casero y bebida sin alcohol.", "Main course, homemade flan and a soft drink.", 33000),
 ]
 PLATOS_AGENCIAS = [

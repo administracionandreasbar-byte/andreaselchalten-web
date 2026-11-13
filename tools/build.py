@@ -310,7 +310,7 @@ def agencias(lang):
         ("Confirmá el horario", "Llegada estimada, a más tardar la mañana del mismo día.", "Confirm the time", "Estimated arrival, by the morning of the same day at the latest."),
         ("Lo confirmamos por escrito", "Pasajeros, menú y horario acordados.", "We confirm in writing", "Passengers, menu and time agreed."),
         ("Servimos en menos de 30 minutos", "Con menú único y horario confirmado.", "Served in under 30 minutes", "With a single set menu and a confirmed time."),
-        ("Factura y pago", "Enviamos la factura dentro de las 72 horas hábiles; el pago, dentro de las 72 horas hábiles de recibirla.", "Invoice and payment", "We send the invoice within 72 business hours; payment is due within 72 business hours of receiving it."),
+        ("Factura y pago", "Emitimos factura A dentro de las 72 horas hábiles del servicio. El pago se hace dentro de las 72 horas hábiles de recibida la factura.", "Invoice and payment", "We issue an invoice within 72 business hours of the service. Payment is due within 72 business hours of receiving the invoice."),
     ]
     pasos_html = "".join(f"<li><b>{e(a if es else c)}</b><span>{e(b if es else d)}</span></li>" for a, b, c, d in pasos)
     h = head(lang, "agencias", titulo, desc) + header(lang, "agencias")
@@ -334,7 +334,7 @@ def agencias(lang):
 <div class="dato"><b>{'Hasta 25' if es else 'Up to 25'}</b><span>{'personas sentadas adentro. Patio extra con buen clima.' if es else 'seated indoors. Extra patio seating in good weather.'}</span></div>
 <div class="dato"><b>{'Menos de 30 min' if es else 'Under 30 min'}</b><span>{'con menú único y horario confirmado.' if es else 'with a single set menu and a confirmed time.'}</span></div>
 <div class="dato"><b>{'Sin cargo' if es else 'Free'}</b><span>{'la comida de guía y chofer, desde 4 pasajeros.' if es else 'meals for guides and drivers, from 4 passengers.'}</span></div>
-<div class="dato"><b>{'Factura A' if es else 'Invoices'}</b><span>{'y pago a 72 horas hábiles de recibida.' if es else 'issued, payment due 72 business hours after receipt.'}</span></div>
+<div class="dato"><b>{'Factura A' if es else 'Invoices'}</b><span>{'Emitimos factura A dentro de las 72 horas hábiles del servicio. El pago se hace dentro de las 72 horas hábiles de recibida la factura.' if es else 'We issue an invoice within 72 business hours of the service. Payment is due within 72 business hours of receiving the invoice.'}</span></div>
 </div>
 <p>{'Atención en español e inglés. Estacionamiento para el transporte. Podemos recibir grupos fuera del horario habitual si lo coordinamos antes.' if es else 'Service in Spanish and English. Parking for your vehicle. We can host groups outside regular hours if arranged in advance.'}</p>
 </div>
@@ -348,7 +348,6 @@ def agencias(lang):
 <thead><tr><th>{'Modalidad' if es else 'Option'}</th></tr></thead>
 <tbody>{filas}</tbody>
 </table>
-<p style="margin-top:14px;color:var(--suave);font-size:.95rem">{'En las modalidades sin bebida, los pasajeros pueden comprarla en el local.' if es else 'For options without drinks, passengers can buy them at the restaurant.'}</p>
 <div class="acciones" style="margin-top:18px">{btn_wa('Pedir tarifas para agencias' if es else 'Request agency rates', ('Hola, vi la web de Andreas. Trabajo en una agencia y quiero recibir las tarifas para grupos.' if es else 'Hi, I saw the Andreas website. I work for an agency and would like your group rates.'))}</div>
 <p style="margin-top:12px;font-size:.95rem">{'O por mail:' if es else 'Or by email:'} <a href="mailto:{N['mail']}?subject={'Tarifas para agencias' if es else 'Agency rates'}">{N['mail']}</a></p>
 </div>
@@ -357,6 +356,9 @@ def agencias(lang):
 <ul class="lista" style="margin-top:12px">{platos}</ul>
 <h3 style="margin-top:28px">{'Viandas para la excursión' if es else 'Packed lunches'}</h3>
 <p style="margin-top:8px">{e(VIANDA[1] if es else VIANDA[2])} {'Listas a la hora que nos digas.' if es else 'Ready at the time you set.'}</p>
+<h3 style="margin-top:28px" id="viandas">{'Viandas por mayor para alojamientos' if es else 'Bulk packed lunches for hostels and lodges'}</h3>
+<p style="margin-top:8px">{'Encargá viandas para tus huéspedes y revendelas con tu margen. Sándwich de jamón y queso (o vegetariano), fruta, barra de cereal y agua. Pedido la noche anterior, retiro a la hora que coordinemos.' if es else 'Order packed lunches for your guests and resell them with your margin. Ham and cheese sandwich (or vegetarian), fruit, a cereal bar and water. Order the night before, pick up at the time we agree.'}</p>
+<div class="acciones" style="margin-top:14px">{btn_wa('Pedir precio de viandas' if es else 'Ask for packed lunch prices', ('Hola, vi la web de Andreas. Tengo un alojamiento y quiero el precio de las viandas por mayor.' if es else 'Hi, I saw the Andreas website. I run a lodging and would like your bulk packed lunch prices.'), 'btn btn-linea')}</div>
 </div>
 </div>
 </section>

@@ -2,6 +2,23 @@
   var lang = document.documentElement.lang === 'en' ? 'en' : 'es';
   var WA = '5491127843427';
 
+  // Origen de la visita (?ref=whatsapp, ?ref=mail…): se recuerda durante la visita y viaja en los mensajes
+  var ORIGEN = '';
+  try {
+    var ref = new URLSearchParams(location.search).get('ref');
+    if (ref) sessionStorage.setItem('origen', ref.replace(/[^a-z0-9_-]/gi, '').slice(0, 30));
+    ORIGEN = sessionStorage.getItem('origen') || '';
+  } catch (e) {}
+  if (ORIGEN) {
+    document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function (a) {
+      var u = new URL(a.href), t = u.searchParams.get('text');
+      if (t) a.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(t + '\n' + (lang === 'en' ? 'Source: ' : 'Origen: ') + ORIGEN);
+    });
+    document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
+      a.href = a.href + (a.href.indexOf('?') > -1 ? '&' : '?') + 'body=' + encodeURIComponent((lang === 'en' ? 'Source: ' : 'Origen: ') + ORIGEN);
+    });
+  }
+
   // Hora de El Chaltén (UTC-3, sin horario de verano)
   function horaLocal() {
     var d = new Date();
@@ -57,6 +74,7 @@
       }
       err.hidden = true;
       var lineas = [form.dataset.wa];
+      if (ORIGEN) lineas.push((lang === 'en' ? 'Source: ' : 'Origen: ') + ORIGEN);
       form.querySelectorAll('[data-etiqueta]').forEach(function (campo) {
         var v = campo.value.trim();
         if (!v) return;
