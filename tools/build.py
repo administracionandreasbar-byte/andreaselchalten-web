@@ -50,6 +50,29 @@ T = {
     },
 }
 
+def ld_json(lang):
+    es = lang == "es"
+    d = {
+        "@context": "https://schema.org", "@type": "Restaurant", "@id": DOMINIO + "/#restaurante",
+        "name": "Andreas – Food & Drinks for Adventurers", "url": DOMINIO + RUTAS["inicio"][lang],
+        "image": [DOMINIO + "/img/salon-sandwich-1400.webp", DOMINIO + "/img/logo-1024.png"],
+        "logo": DOMINIO + "/img/logo-1024.png",
+        "telephone": "+" + N["whatsapp"], "email": N["mail"],
+        "address": {"@type": "PostalAddress", "streetAddress": "San Martín 351", "addressLocality": "El Chaltén",
+                    "addressRegion": "Santa Cruz", "postalCode": "9301", "addressCountry": "AR"},
+        "geo": {"@type": "GeoCoordinates", "latitude": -49.3312, "longitude": -72.8862},
+        "openingHoursSpecification": [{"@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "12:00", "closes": "23:59"}],
+        "servesCuisine": ["Hamburguesas", "Milanesas", "Pizza", "Pastas", "Parrilla"] if es else ["Burgers", "Milanesa", "Pizza", "Pasta", "Steak"],
+        "priceRange": "$$", "currenciesAccepted": "ARS",
+        "hasMenu": DOMINIO + RUTAS["menu"][lang],
+        "acceptsReservations": DOMINIO + RUTAS["reservas"][lang],
+        "sameAs": [N["instagram"]],
+        "inLanguage": ["es", "en"],
+    }
+    return json.dumps(d, ensure_ascii=False).replace("</", "<\\/")
+
 def head(lang, pagina, titulo, descripcion):
     otro = "en" if lang == "es" else "es"
     robots = "" if INDEXAR else '<meta name="robots" content="noindex">\n'
@@ -76,6 +99,7 @@ def head(lang, pagina, titulo, descripcion):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400..900&display=swap">
 <link rel="stylesheet" href="/css/site.css">
+<script type="application/ld+json">{ld_json(lang)}</script>
 </head>
 <body>
 <a class="salto" href="#contenido">{T[lang]['saltar']}</a>
@@ -99,8 +123,13 @@ def header(lang, pagina):
 <main id="contenido">
 """
 
-def footer(lang):
+def footer(lang, pagina=None):
     t = T[lang]
+    es = lang == "es"
+    barra = "" if pagina in ("reservas", "socios") else f"""<nav class="barra-movil" aria-label="{'Acciones rápidas' if es else 'Quick actions'}">
+<a class="btn btn-wa" href="{RUTAS['reservas'][lang]}">{'Reservar mesa' if es else 'Book a table'}</a>
+<a class="btn btn-claro" href="https://wa.me/{N['whatsapp']}?text={'Hola%2C%20vi%20la%20web%20de%20Andreas%20y%20quiero%20consultar%3A%20' if es else 'Hi%2C%20I%20saw%20the%20Andreas%20website%20and%20I%27d%20like%20to%20ask%3A%20'}">{ICONO_WA}WhatsApp</a>
+</nav>"""
     links = "".join(f'<li><a href="{RUTAS[k][lang]}">{e(v)}</a></li>' for k, v in t["nav"])
     links += f'<li><a href="{RUTAS["socios"][lang]}">{"Socios: hoteles y agencias" if lang == "es" else "Partners: hotels and agencies"}</a></li>'
     return f"""</main>
@@ -115,6 +144,7 @@ def footer(lang):
 <p class="legal">{t['legal']}</p>
 </div>
 </footer>
+{barra}
 <script src="/js/site.js" defer></script>
 </body>
 </html>
@@ -165,7 +195,7 @@ def inicio(lang):
 <p>{e(desc)}</p>
 <span class="precio etiqueta-precio">{precio(p, lang)}</span>
 </article>""" for img, forma, nom, desc, p in platos)
-    titulo = "Andreas – Food & Drinks for Adventurers | Restaurante en El Chaltén" if es else "Andreas – Food & Drinks for Adventurers | Restaurant in El Chaltén"
+    titulo = "Andreas | Restaurante en El Chaltén: hamburguesas y cerveza artesanal" if es else "Andreas | Where to eat in El Chaltén: burgers & craft beer"
     desc = ("Restaurante en El Chaltén para después del sendero: hamburguesas, milanesas, pizzas, pastas y bife, con cerveza artesanal tirada. Todos los días de 12 a 24 h." if es else
             "Restaurant in El Chaltén for after the trail: burgers, milanesas, pizza, pasta and steak, with craft beer on tap. Open daily, noon to midnight.")
     h = head(lang, "inicio", titulo, desc) + header(lang, "inicio")
@@ -279,7 +309,7 @@ def menu(lang):
             lis.append(f'<li class="item"><h3>{e(n_es if es else n_en)}{marcas}</h3><span class="precio">{precio(p, lang)}</span>{f"<p>{e(d)}</p>" if d else ""}</li>')
         nota = notaes if es else notaen
         secciones.append(f'<section id="{sid}"><h2>{e(nes if es else nen)}</h2>{f"<p class=\"nota\">{e(nota)}</p>" if nota else ""}<ul class="items">{"".join(lis)}</ul></section>')
-    titulo = "Menú de Andreas con precios | El Chaltén" if es else "Andreas menu with prices | El Chaltén"
+    titulo = "Menú con precios: hamburguesas, milanesas y pizzas | Andreas, El Chaltén" if es else "Menu with prices: burgers, milanesas & pizza | Andreas, El Chaltén"
     desc = "Carta completa con precios: hamburguesas, milanesas, pizzas, pastas, bife, cervezas, tragos y vinos." if es else "Full menu with prices: burgers, milanesas, pizza, pasta, steak, beer, cocktails and wine."
     h = head(lang, "menu", titulo, desc) + header(lang, "menu")
     h += f"""<section class="menu-hero"><div class="wrap">
@@ -508,7 +538,7 @@ def reservas(lang):
 </section>
 <script src="/js/reservar.js" defer></script>
 """
-    return h + footer(lang)
+    return h + footer(lang, "reservas")
 
 # ---------------- SOCIOS ----------------
 def socios(lang):
@@ -546,7 +576,7 @@ def socios(lang):
 </section>
 <script src="/js/socios.js" defer></script>
 """
-    return h + footer(lang)
+    return h + footer(lang, "socios")
 
 def escribir(ruta, contenido):
     destino = os.path.join(RAIZ, ruta.strip("/"), "index.html") if ruta != "/" else os.path.join(RAIZ, "index.html")
@@ -567,4 +597,13 @@ manifest = {"name": "Andreas – Food & Drinks for Adventurers", "short_name": "
                       {"src": "/img/logo-512.png", "sizes": "512x512", "type": "image/png"}]}
 with open(os.path.join(RAIZ, "manifest.webmanifest"), "w") as f:
     json.dump(manifest, f, ensure_ascii=False, indent=1)
+urls = []
+for k in RUTAS:
+    for lang in ("es", "en"):
+        alt = "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{DOMINIO}{RUTAS[k][l]}"/>' for l in ("es", "en"))
+        urls.append(f"<url><loc>{DOMINIO}{RUTAS[k][lang]}</loc>{alt}</url>")
+with open(os.path.join(RAIZ, "sitemap.xml"), "w", encoding="utf-8") as f:
+    f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' + "\n".join(urls) + "\n</urlset>\n")
+with open(os.path.join(RAIZ, "robots.txt"), "w") as f:
+    f.write(f"User-agent: *\nDisallow: /api/\n\nSitemap: {DOMINIO}/sitemap.xml\n")
 print("Listo")

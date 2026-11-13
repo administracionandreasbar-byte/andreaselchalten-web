@@ -368,3 +368,15 @@ p{margin:0 0 .8em;max-width:62ch}
 .link-socio p{margin:0}
 .link-socio .url{font-size:.92rem;color:var(--suave);word-break:break-all;margin:4px 0 12px}
 .socio-listo{outline:none;max-width:720px;margin-top:8px}
+/* Barra fija de acciones en el celular */
+.barra-movil{display:none}
+@media (max-width:860px){
+  .barra-movil{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(33,31,32,.96);box-shadow:0 -8px 24px rgba(0,0,0,.18)}
+  .barra-movil .btn{min-height:46px;padding:10px 12px;font-size:.98rem}
+  .barra-movil svg{width:20px;height:20px}
+  .barra-movil{transform:translateY(110%);transition:transform .25s ease}
+  .barra-movil.visible{transform:none}
+  body:has(.barra-movil) .pie{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+}
+@media (max-width:860px) and (prefers-reduced-motion:reduce){.barra-movil{transition:none}
+}

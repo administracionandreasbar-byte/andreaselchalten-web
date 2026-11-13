@@ -252,3 +252,12 @@
   }, { rootMargin: '-40% 0px -55% 0px' });
   Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) obs.observe(s); });
 })();
+
+// Barra fija del celular: aparece al bajar un poco (en la portada ya están los mismos botones)
+(function () {
+  var barra = document.querySelector('.barra-movil');
+  if (!barra) return;
+  var umbral = document.querySelector('.portada') ? 420 : 120;
+  var ver = function () { barra.classList.toggle('visible', window.scrollY > umbral); };
+  window.addEventListener('scroll', ver, { passive: true }); ver();
+})();
