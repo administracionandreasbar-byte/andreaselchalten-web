@@ -349,21 +349,15 @@ p{margin:0 0 .8em;max-width:62ch}
   .portada h1{max-width:11ch}
 }
 
-/* Índice flotante: aparece a la izquierda mientras se scrollea y se va al parar */
-.indice{position:fixed;z-index:30;left:16px;top:50%;transform:translate(-12px,-50%);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease}
+/* Índice flotante: solo palabras, a la izquierda, aparece al scrollear */
+.indice{position:fixed;z-index:30;left:20px;top:50%;transform:translate(-10px,-50%);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease}
 .indice.visible,.indice:hover,.indice:focus-within{opacity:1;transform:translate(0,-50%);pointer-events:auto}
-.indice-boton{display:none}
-.indice ol{list-style:none;margin:0;padding:10px;background:rgba(248,249,240,.95);backdrop-filter:blur(6px);border-radius:18px;box-shadow:0 10px 30px rgba(33,31,32,.2);display:grid;gap:2px}
-.indice a{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:.86rem;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--suave);white-space:nowrap}
-.indice a::before{content:"";width:8px;height:8px;border-radius:50%;background:#c9c3b8;flex-shrink:0}
-.indice a:hover{background:var(--crema);color:var(--carbon)}
-.indice a.activo{color:var(--carbon)}
-.indice a.activo::before{background:var(--rojo);box-shadow:0 0 0 3px rgba(200,50,42,.2)}
-.indice .indice-cta a{background:var(--rojo);color:#fff;margin-top:4px;justify-content:center}
-.indice .indice-cta a::before{display:none}
-@media (max-width:760px){
-  .indice{left:8px}
-  .indice ol{padding:6px}
-  .indice a{font-size:.78rem;padding:6px 8px;gap:8px}
-  .indice a:not(.activo) span{display:none}
-}
+.indice ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.indice a{display:block;text-decoration:none;font-size:.8rem;font-weight:600;color:var(--carbon);opacity:.6;white-space:nowrap;
+  text-shadow:0 0 4px var(--papel),0 0 8px var(--papel),0 0 12px var(--papel);transition:font-size .2s ease,opacity .2s ease}
+.indice a:hover{opacity:1}
+.indice a.activo{font-size:1.08rem;font-weight:800;opacity:1}
+.indice .indice-cta a{color:var(--rojo);opacity:1;margin-top:6px}
+.indice.oscuro a{color:var(--crema);text-shadow:0 0 4px rgba(0,0,0,.6),0 0 10px rgba(0,0,0,.5)}
+.indice.oscuro .indice-cta a{color:#ffb4a8}
+@media (max-width:760px){.indice{left:12px}.indice a{font-size:.74rem}.indice a.activo{font-size:.95rem}}

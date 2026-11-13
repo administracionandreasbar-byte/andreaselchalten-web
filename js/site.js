@@ -218,6 +218,7 @@
     es.forEach(function (e) {
       if (!e.isIntersecting) return;
       Object.keys(links).forEach(function (k) { links[k].classList.toggle('activo', k === e.target.id); });
+      nav.classList.toggle('oscuro', e.target.dataset.tono === 'oscuro');
     });
   }, { rootMargin: '-40% 0px -55% 0px' });
   Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) obs.observe(s); });

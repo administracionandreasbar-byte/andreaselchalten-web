@@ -197,7 +197,7 @@ def inicio(lang):
 <div class="platos">{platos_html}</div>
 </div>
 </section>
-<section class="hh" id="happy-hour">
+<section class="hh" id="happy-hour" data-tono="oscuro">
 {cresta('#c8322a','arriba')}
 <div class="wrap">
 <div class="grande">{'16–20 h' if es else '4–8 pm'}</div>
@@ -215,7 +215,7 @@ def inicio(lang):
 {resenas_html(lang, [0,1,2,3,4,5,6,7])}
 </div>
 </section>
-<section class="seccion grupos" id="grupos">
+<section class="seccion grupos" id="grupos" data-tono="oscuro">
 {cresta('#211f20','arriba')}
 <div class="wrap dividido">
 <div class="arco-foto"><img style="object-position:50% 88%" src="/img/napolitana-salon-800.webp" alt="{'Milanesa napolitana con ensalada en el salón de noche' if es else 'Milanesa napolitana with salad in the dining room at night'}" width="800" height="1067" loading="lazy"></div>
