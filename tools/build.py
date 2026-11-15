@@ -389,7 +389,7 @@ def agencias(lang):
 <h3 style="margin-top:28px">{'Viandas para la excursión' if es else 'Packed lunches'}</h3>
 <p style="margin-top:8px">{e(VIANDA[1] if es else VIANDA[2])} {'Listas a la hora que nos digas.' if es else 'Ready at the time you set.'}</p>
 <h3 style="margin-top:28px" id="viandas">{'Viandas por mayor para alojamientos' if es else 'Bulk packed lunches for hostels and lodges'}</h3>
-<p style="margin-top:8px">{'Encargá viandas para tus huéspedes y revendelas con tu margen. Dos sándwiches, un brownie y un agua, o la supervianda con sándwich de milanesa. Pedido la noche anterior, retiro a la hora que coordinemos.' if es else 'Order packed lunches for your guests and resell them with your margin. Ham and cheese sandwich (or vegetarian), fruit, a cereal bar and water. Order the night before, pick up at the time we agree.'}</p>
+<p style="margin-top:8px">{'Encargá viandas para tus huéspedes y revendelas con tu margen. Dos sándwiches, un brownie y un agua, o la supervianda con sándwich de milanesa. Pedido la noche anterior, retiro a la hora que coordinemos.' if es else 'Order packed lunches for your guests and resell them with your margin. Two sandwiches, a brownie and water, or the super pack with a milanesa sandwich. Order the night before, pick up at the time we agree.'}</p>
 <div class="acciones" style="margin-top:14px">{btn_wa('Pedir precio de viandas' if es else 'Ask for packed lunch prices', ('Hola, vi la web de Andreas. Tengo un alojamiento y quiero el precio de las viandas por mayor.' if es else 'Hi, I saw the Andreas website. I run a lodging and would like your bulk packed lunch prices.'), 'btn btn-linea')}</div>
 </div>
 </div>
