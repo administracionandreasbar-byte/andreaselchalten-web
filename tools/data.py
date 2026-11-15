@@ -159,8 +159,8 @@ PLATOS_AGENCIAS = [
     ("Corinto, vegetariana, con papas fritas", "Corinto veggie burger with fries"),
 ]
 VIANDA = (16000,
-          "Sándwich de jamón y queso (o vegetariano de queso, tomate y lechuga), una fruta, una barra de cereal y agua.",
-          "Ham and cheese sandwich (or veggie: cheese, tomato and lettuce), a piece of fruit, a cereal bar and water.")
+          "Dos sándwiches (jamón y queso, o queso, lechuga y tomate), un brownie y un agua. También hay supervianda, con sándwich de milanesa.",
+          "Two sandwiches (ham and cheese, or cheese, lettuce and tomato), a brownie and a bottle of water. Also a super pack with a milanesa sandwich.")
 
 # Plano de mesas (borrador del 12/11, a confirmar con Álvaro).
 # zona, id, etiqueta, forma (rect/circ), x, y, ancho, alto (o radio), capacidad, reservable
