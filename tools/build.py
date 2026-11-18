@@ -265,7 +265,7 @@ def inicio(lang):
 <li><b>{'Vianda' if es else 'Packed lunch'}</b> · $20.000</li>
 <li><b>{'Supervianda' if es else 'Super pack'}</b> · $25.000</li>
 </ul>
-<p class="ayuda" style="margin-top:10px">{'Encargala hasta la noche anterior. Te confirmamos el horario de retiro por WhatsApp. Para alojamientos y agencias hay precio por mayor.' if es else 'Order by the night before. We confirm the pick-up time on WhatsApp. Wholesale prices for lodgings and agencies.'}</p>
+<p class="ayuda" style="margin-top:10px">{'Encargala con 24 a 48 horas de anticipación. Te confirmamos el horario de retiro por WhatsApp. Para alojamientos y agencias hay precio por mayor.' if es else 'Order 24 to 48 hours ahead. We confirm the pick-up time on WhatsApp. Wholesale prices for lodgings and agencies.'}</p>
 </div>
 <div><details class="pedir"><summary class="btn btn-wa">{ICONO_WA}{'Encargar viandas' if es else 'Order packed lunches'}</summary>{form_viandas(lang)}</details></div>
 </div>
@@ -374,12 +374,12 @@ def agencias(lang):
         ("Tiempo de servicio" if es else "Service time", "Menos de 30 minutos, con menú único y horario confirmado." if es else "Under 30 minutes, with a single set menu and a confirmed time."),
         ("Guía y chofer" if es else "Guide and driver", "Comen sin cargo desde 4 pasajeros." if es else "Eat free from 4 passengers."),
         ("Facturación" if es else "Invoicing", "Factura A dentro de las 72 h hábiles del servicio. Pago dentro de las 72 h hábiles de recibida." if es else "Invoice within 72 business hours of the service. Payment within 72 business hours of receipt."),
-        ("Viandas por mayor" if es else "Bulk packed lunches", e(VIANDA[1] if es else VIANDA[2]) + (" Listas a la hora que nos digas, con delivery o retiro en el local. Precios por WhatsApp." if es else " Ready at the time you set; we deliver or you pick up. Prices on WhatsApp.")),
+        ("Viandas por mayor" if es else "Bulk packed lunches", e(VIANDA[1] if es else VIANDA[2]) + (" Pedido con 24 a 48 horas de anticipación, listas a la hora que nos digas, con delivery o retiro en el local. Precios por WhatsApp." if es else " Order 24 to 48 hours ahead, ready at the time you set; we deliver or you pick up. Prices on WhatsApp.")),
         ("Idiomas y horario" if es else "Languages and hours", "Español e inglés. Todos los días de 12 a 24 h; fuera de horario, a coordinar." if es else "Spanish and English. Every day from 12 noon to midnight; other times on request."),
     ])
     ficha_ho = ficha([
         ("Para tus huéspedes y tu equipo" if es else "For your guests and team", "Beneficios exclusivos para alojamientos con convenio. Te los contamos por WhatsApp." if es else "Exclusive perks for partner lodgings. We share them on WhatsApp."),
-        ("Viandas por mayor" if es else "Bulk packed lunches", "Dos sándwiches, un brownie y un agua, o la supervianda con sándwich de milanesa, para que las revendas con tu margen. Pedido la noche anterior, con delivery o retiro en el local. Precios por WhatsApp." if es else "Two sandwiches, a brownie and water, or the super pack with a milanesa sandwich, for you to resell with your margin. Order the night before; we deliver or you pick up. Prices on WhatsApp."),
+        ("Viandas por mayor" if es else "Bulk packed lunches", "Dos sándwiches, un brownie y un agua, o la supervianda con sándwich de milanesa, para que las revendas con tu margen. Pedido con 24 a 48 horas de anticipación, con delivery o retiro en el local. Precios por WhatsApp." if es else "Two sandwiches, a brownie and water, or the super pack with a milanesa sandwich, for you to resell with your margin. Order 24 to 48 hours ahead; we deliver or you pick up. Prices on WhatsApp."),
     ])
     h += f"""<section class="hero hero-b2b">
 <div class="wrap">
@@ -474,7 +474,7 @@ def form_viandas(lang):
 <div class="full"><label for="v-agencia">{'Tu nombre o el de tu alojamiento' if es else 'Your name or your lodging'}</label><input id="v-agencia" required data-etiqueta="{'Nombre' if es else 'Name'}" autocomplete="name"></div>
 <div><label for="v-menu">{'Qué vianda' if es else 'Which pack'}</label><select id="v-menu" required data-etiqueta="{'Vianda' if es else 'Pack'}"><option value="">{'Elegí una opción' if es else 'Choose an option'}</option>{op}</select></div>
 <div><label for="v-pax">{'Cantidad' if es else 'How many'}</label><input id="v-pax" type="number" min="1" max="200" required inputmode="numeric" data-etiqueta="{'Cantidad' if es else 'Quantity'}"></div>
-<div><label for="v-fecha">{'Día de retiro' if es else 'Pick-up day'}</label><input id="v-fecha" type="date" required data-etiqueta="{'Retiro' if es else 'Pick-up'}"></div>
+<div><label for="v-fecha">{'Día de retiro' if es else 'Pick-up day'}</label><input id="v-fecha" type="date" required data-anticipacion="1" data-etiqueta="{'Retiro' if es else 'Pick-up'}"></div>
 <div><label for="v-hora">{'Hora de retiro' if es else 'Pick-up time'}</label><input id="v-hora" type="time" required data-etiqueta="{'Hora' if es else 'Time'}"></div>
 <div class="full"><label for="v-notas">{'Comentarios' if es else 'Notes'}</label><textarea id="v-notas" data-etiqueta="{'Comentarios' if es else 'Notes'}" placeholder="{'Cuántas vegetarianas, a qué sendero vas, etc.' if es else 'How many vegetarian, which trail, etc.'}"></textarea></div>
 <p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>

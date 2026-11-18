@@ -61,6 +61,7 @@
     var fecha = form.querySelector('input[type="date"]');
     if (fecha) {
       var hoy = horaLocal();
+      if (fecha.dataset.anticipacion) hoy.setDate(hoy.getDate() + (+fecha.dataset.anticipacion));
       fecha.min = hoy.toISOString().slice(0, 10);
     }
     form.addEventListener('submit', function (ev) {
