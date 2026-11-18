@@ -13,7 +13,6 @@ RUTAS = {
     "menu":     {"es": "/menu/", "en": "/en/menu/"},
     "agencias": {"es": "/agencias/", "en": "/en/agencies/"},
     "reservas": {"es": "/reservas/", "en": "/en/reservations/"},
-    "socios":   {"es": "/socios/", "en": "/en/partners/"},
 }
 e = html.escape
 
@@ -131,7 +130,6 @@ def footer(lang, pagina=None):
 <a class="btn btn-claro" href="https://wa.me/{N['whatsapp']}?text={'Hola%2C%20vi%20la%20web%20de%20Andreas%20y%20quiero%20consultar%3A%20' if es else 'Hi%2C%20I%20saw%20the%20Andreas%20website%20and%20I%27d%20like%20to%20ask%3A%20'}">{ICONO_WA}WhatsApp</a>
 </nav>"""
     links = "".join(f'<li><a href="{RUTAS[k][lang]}">{e(v)}</a></li>' for k, v in t["nav"])
-    links += f'<li><a href="{RUTAS["socios"][lang]}">{"Socios: hoteles y agencias" if lang == "es" else "Partners: hotels and agencies"}</a></li>'
     return f"""</main>
 <footer class="pie">
 <div class="wrap">
@@ -376,13 +374,12 @@ def agencias(lang):
         ("Tiempo de servicio" if es else "Service time", "Menos de 30 minutos, con menú único y horario confirmado." if es else "Under 30 minutes, with a single set menu and a confirmed time."),
         ("Guía y chofer" if es else "Guide and driver", "Comen sin cargo desde 4 pasajeros." if es else "Eat free from 4 passengers."),
         ("Facturación" if es else "Invoicing", "Factura A dentro de las 72 h hábiles del servicio. Pago dentro de las 72 h hábiles de recibida." if es else "Invoice within 72 business hours of the service. Payment within 72 business hours of receipt."),
-        ("Viandas" if es else "Packed lunches", e(VIANDA[1] if es else VIANDA[2]) + (" Listas a la hora que nos digas." if es else " Ready at the time you set.")),
+        ("Viandas por mayor" if es else "Bulk packed lunches", e(VIANDA[1] if es else VIANDA[2]) + (" Listas a la hora que nos digas, con delivery o retiro en el local. Precios por WhatsApp." if es else " Ready at the time you set; we deliver or you pick up. Prices on WhatsApp.")),
         ("Idiomas y horario" if es else "Languages and hours", "Español e inglés. Todos los días de 12 a 24 h; fuera de horario, a coordinar." if es else "Spanish and English. Every day from 12 noon to midnight; other times on request."),
     ])
     ficha_ho = ficha([
         ("Para tus huéspedes y tu equipo" if es else "For your guests and team", "Beneficios exclusivos para alojamientos con convenio. Te los contamos por WhatsApp." if es else "Exclusive perks for partner lodgings. We share them on WhatsApp."),
-        ("Viandas por mayor" if es else "Bulk packed lunches", "Dos sándwiches, un brownie y un agua, o la supervianda con sándwich de milanesa. Precio por mayor para que las revendas con tu margen. Pedido la noche anterior." if es else "Two sandwiches, a brownie and water, or the super pack with a milanesa sandwich. Wholesale price so you can resell with your margin. Order the night before."),
-        ("Tu link de socio" if es else "Your partner link", "Lo que tus huéspedes reservan con tu link queda a tu nombre." if es else "Bookings your guests make with your link are recorded under your name."),
+        ("Viandas por mayor" if es else "Bulk packed lunches", "Dos sándwiches, un brownie y un agua, o la supervianda con sándwich de milanesa, para que las revendas con tu margen. Pedido la noche anterior, con delivery o retiro en el local. Precios por WhatsApp." if es else "Two sandwiches, a brownie and water, or the super pack with a milanesa sandwich, for you to resell with your margin. Order the night before; we deliver or you pick up. Prices on WhatsApp."),
     ])
     h += f"""<section class="hero hero-b2b">
 <div class="wrap">
@@ -426,8 +423,7 @@ def agencias(lang):
 <h2 id="viandas">{'Hoteles, hostels y alojamientos' if es else 'Hotels, hostels and lodges'}</h2>
 {ficha_ho}
 <div class="acciones" style="margin-top:24px">
-<a class="btn btn-wa" href="{RUTAS['socios'][lang]}">{'Quiero mi link de socio' if es else 'Get my partner link'}</a>
-{btn_wa('Pedir los beneficios y precios' if es else 'Ask for perks and prices', ('Hola, vi la web de Andreas. Tengo un alojamiento y quiero conocer los beneficios para huéspedes y el precio de las viandas por mayor.' if es else 'Hi, I saw the Andreas website. I run a lodging and would like to know your guest perks and wholesale packed lunch prices.'), 'btn btn-linea')}
+{btn_wa('Pedir precios y beneficios' if es else 'Ask for prices and perks', ('Hola, vi la web de Andreas. Tengo un alojamiento y quiero el precio de las viandas por mayor y los beneficios para huéspedes.' if es else 'Hi, I saw the Andreas website. I run a lodging and would like your wholesale packed lunch prices and guest perks.'))}
 </div>
 </div>
 </section>
@@ -662,7 +658,6 @@ for lang in ("es", "en"):
     escribir(RUTAS["menu"][lang], menu(lang))
     escribir(RUTAS["agencias"][lang], agencias(lang))
     escribir(RUTAS["reservas"][lang], reservas(lang))
-    escribir(RUTAS["socios"][lang], socios(lang))
 
 manifest = {"name": "Andreas – Food & Drinks for Adventurers", "short_name": "Andreas", "start_url": "/", "display": "standalone",
             "background_color": "#f8f9f0", "theme_color": "#211f20",
