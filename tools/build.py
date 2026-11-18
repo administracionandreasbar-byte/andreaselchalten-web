@@ -380,8 +380,7 @@ def agencias(lang):
         ("Idiomas y horario" if es else "Languages and hours", "Español e inglés. Todos los días de 12 a 24 h; fuera de horario, a coordinar." if es else "Spanish and English. Every day from 12 noon to midnight; other times on request."),
     ])
     ficha_ho = ficha([
-        ("Para tus huéspedes" if es else "For your guests", "10% de descuento en el salón presentando la reserva o la llave." if es else "10% off in the restaurant when they show their booking or room key."),
-        ("Para tu recepción" if es else "For your front desk", "Una comida sin cargo para que nos conozcan. Después, 10% de descuento para el personal." if es else "A free meal so your team gets to know us. After that, 10% off for staff."),
+        ("Para tus huéspedes y tu equipo" if es else "For your guests and team", "Beneficios exclusivos para alojamientos con convenio. Te los contamos por WhatsApp." if es else "Exclusive perks for partner lodgings. We share them on WhatsApp."),
         ("Viandas por mayor" if es else "Bulk packed lunches", "Dos sándwiches, un brownie y un agua, o la supervianda con sándwich de milanesa. Precio por mayor para que las revendas con tu margen. Pedido la noche anterior." if es else "Two sandwiches, a brownie and water, or the super pack with a milanesa sandwich. Wholesale price so you can resell with your margin. Order the night before."),
         ("Tu link de socio" if es else "Your partner link", "Lo que tus huéspedes reservan con tu link queda a tu nombre." if es else "Bookings your guests make with your link are recorded under your name."),
     ])
@@ -428,7 +427,7 @@ def agencias(lang):
 {ficha_ho}
 <div class="acciones" style="margin-top:24px">
 <a class="btn btn-wa" href="{RUTAS['socios'][lang]}">{'Quiero mi link de socio' if es else 'Get my partner link'}</a>
-{btn_wa('Pedir precio de viandas por mayor' if es else 'Ask for wholesale lunch prices', ('Hola, vi la web de Andreas. Tengo un alojamiento y quiero el precio de las viandas por mayor.' if es else 'Hi, I saw the Andreas website. I run a lodging and would like your wholesale packed lunch prices.'), 'btn btn-linea')}
+{btn_wa('Pedir los beneficios y precios' if es else 'Ask for perks and prices', ('Hola, vi la web de Andreas. Tengo un alojamiento y quiero conocer los beneficios para huéspedes y el precio de las viandas por mayor.' if es else 'Hi, I saw the Andreas website. I run a lodging and would like to know your guest perks and wholesale packed lunch prices.'), 'btn btn-linea')}
 </div>
 </div>
 </section>
