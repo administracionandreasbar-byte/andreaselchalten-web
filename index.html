@@ -147,12 +147,16 @@
 <div class="wrap dividido">
 <div>
 <h2>Viandas para el sendero</h2>
-<p style="margin-top:14px">Dos sándwiches (jamón y queso, o queso, lechuga y tomate), un brownie y un agua. La supervianda trae sándwich de milanesa. Encargala hasta la noche anterior y pasá a buscarla a la hora que elijas.</p>
-<p class="ayuda" style="margin-top:10px">Te confirmamos el precio y el horario por WhatsApp. Para alojamientos y agencias hay precio por mayor.</p>
+<p style="margin-top:14px">Dos sándwiches (jamón y queso, o queso, lechuga y tomate), un brownie y un agua. La supervianda trae un sándwich de milanesa, otro a elección, un brownie y un agua.</p>
+<ul class="precios-vianda" style="margin-top:14px;padding:0;list-style:none">
+<li><b>Vianda</b> · $20.000</li>
+<li><b>Supervianda</b> · $25.000</li>
+</ul>
+<p class="ayuda" style="margin-top:10px">Encargala hasta la noche anterior. Te confirmamos el horario de retiro por WhatsApp. Para alojamientos y agencias hay precio por mayor.</p>
 </div>
 <div><form class="form" data-wa="Hola, quiero encargar viandas." data-api="grupo" data-prefijo="v" data-tipo="Viandas" novalidate style="margin-top:24px">
 <div class="full"><label for="v-agencia">Tu nombre o el de tu alojamiento</label><input id="v-agencia" required data-etiqueta="Nombre" autocomplete="name"></div>
-<div><label for="v-menu">Qué vianda</label><select id="v-menu" required data-etiqueta="Vianda"><option value="">Elegí una opción</option><option>Vianda</option><option>Supervianda</option><option>Mitad y mitad</option></select></div>
+<div><label for="v-menu">Qué vianda</label><select id="v-menu" required data-etiqueta="Vianda"><option value="">Elegí una opción</option><option>Vianda ($20.000)</option><option>Supervianda ($25.000)</option><option>Mitad y mitad</option></select></div>
 <div><label for="v-pax">Cantidad</label><input id="v-pax" type="number" min="1" max="200" required inputmode="numeric" data-etiqueta="Cantidad"></div>
 <div><label for="v-fecha">Día de retiro</label><input id="v-fecha" type="date" required data-etiqueta="Retiro"></div>
 <div><label for="v-hora">Hora de retiro</label><input id="v-hora" type="time" required data-etiqueta="Hora"></div>

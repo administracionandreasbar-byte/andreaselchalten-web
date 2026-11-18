@@ -380,3 +380,4 @@ p{margin:0 0 .8em;max-width:62ch}
 }
 @media (max-width:860px) and (prefers-reduced-motion:reduce){.barra-movil{transition:none}
 }
+.precios-vianda li{font-size:1.15rem;padding:6px 0;border-bottom:1px solid rgba(33,31,32,.12)}

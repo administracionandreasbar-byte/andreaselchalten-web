@@ -262,8 +262,12 @@ def inicio(lang):
 <div class="wrap dividido">
 <div>
 <h2>{'Viandas para el sendero' if es else 'Packed lunches for the trail'}</h2>
-<p style="margin-top:14px">{'Dos sándwiches (jamón y queso, o queso, lechuga y tomate), un brownie y un agua. La supervianda trae sándwich de milanesa. Encargala hasta la noche anterior y pasá a buscarla a la hora que elijas.' if es else 'Two sandwiches (ham and cheese, or cheese, lettuce and tomato), a brownie and water. The super pack comes with a milanesa sandwich. Order by the night before and pick it up whenever you want.'}</p>
-<p class="ayuda" style="margin-top:10px">{'Te confirmamos el precio y el horario por WhatsApp. Para alojamientos y agencias hay precio por mayor.' if es else 'We confirm the price and pick-up time on WhatsApp. Wholesale prices for lodgings and agencies.'}</p>
+<p style="margin-top:14px">{'Dos sándwiches (jamón y queso, o queso, lechuga y tomate), un brownie y un agua. La supervianda trae un sándwich de milanesa, otro a elección, un brownie y un agua.' if es else 'Two sandwiches (ham and cheese, or cheese, lettuce and tomato), a brownie and water. The super pack has a milanesa sandwich, another sandwich of your choice, a brownie and water.'}</p>
+<ul class="precios-vianda" style="margin-top:14px;padding:0;list-style:none">
+<li><b>{'Vianda' if es else 'Packed lunch'}</b> · $20.000</li>
+<li><b>{'Supervianda' if es else 'Super pack'}</b> · $25.000</li>
+</ul>
+<p class="ayuda" style="margin-top:10px">{'Encargala hasta la noche anterior. Te confirmamos el horario de retiro por WhatsApp. Para alojamientos y agencias hay precio por mayor.' if es else 'Order by the night before. We confirm the pick-up time on WhatsApp. Wholesale prices for lodgings and agencies.'}</p>
 </div>
 <div>{form_viandas(lang)}</div>
 </div>
@@ -456,7 +460,7 @@ def form_grupo(lang):
 def form_viandas(lang):
     es = lang == "es"
     intro = "Hola, quiero encargar viandas." if es else "Hi, I want to order packed lunches."
-    tipos = [("Vianda", "Packed lunch"), ("Supervianda", "Super pack"), ("Mitad y mitad", "Half and half")]
+    tipos = [("Vianda ($20.000)", "Packed lunch ($20.000)"), ("Supervianda ($25.000)", "Super pack ($25.000)"), ("Mitad y mitad", "Half and half")]
     op = "".join(f'<option>{e(a if es else b)}</option>' for a, b in tipos)
     return f"""<form class="form" data-wa="{e(intro)}" data-api="grupo" data-prefijo="v" data-tipo="Viandas" novalidate style="margin-top:24px">
 <div class="full"><label for="v-agencia">{'Tu nombre o el de tu alojamiento' if es else 'Your name or your lodging'}</label><input id="v-agencia" required data-etiqueta="{'Nombre' if es else 'Name'}" autocomplete="name"></div>
