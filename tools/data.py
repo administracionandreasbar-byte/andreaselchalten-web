@@ -12,7 +12,7 @@ NEGOCIO = {
     "maps_embed": "https://www.google.com/maps?q=Andreas+Food+%26+Drinks,+San+Mart%C3%ADn+351,+El+Chalt%C3%A9n,+Santa+Cruz&output=embed",
     "rating": "4,5",
     "rating_en": "4.5",
-    "resenas": "150",
+    "resenas": "160",
 }
 
 # Platos más vendidos según el POS (octubre 2026). Se revisa cada mes.

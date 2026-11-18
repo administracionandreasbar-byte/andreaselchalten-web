@@ -29,7 +29,7 @@ def wa_link(texto):
 
 T = {
     "es": {
-        "nav": [("menu", "Menú"), ("agencias", "Grupos y agencias"), ("reservas", "Reservar")],
+        "nav": [("menu", "Menú"), ("agencias", "Agencias y hoteles"), ("reservas", "Reservar")],
         "saltar": "Ir al contenido",
         "wa_hola": "Hola, vi la web de Andreas y quiero consultar: ",
         "legal": "Venta de alcohol prohibida a menores de 18 años. Beber con moderación. Ley 24.788.",
@@ -39,7 +39,7 @@ T = {
         "orig": {"es": "", "en": "Traducida del inglés", "pt": "Traducida del portugués", "fr": "Traducida del francés", "de": "Traducida del alemán"},
     },
     "en": {
-        "nav": [("menu", "Menu"), ("agencias", "Groups & agencies"), ("reservas", "Book a table")],
+        "nav": [("menu", "Menu"), ("agencias", "Agencies & hotels"), ("reservas", "Book a table")],
         "saltar": "Skip to content",
         "wa_hola": "Hi, I saw the Andreas website and I'd like to ask: ",
         "legal": "Alcohol is not sold to anyone under 18. Please drink responsibly.",
@@ -252,9 +252,9 @@ def inicio(lang):
 <div class="wrap dividido">
 <div class="arco-foto"><img style="object-position:50% 88%" src="/img/napolitana-salon-800.webp" alt="{'Milanesa napolitana con ensalada en el salón de noche' if es else 'Milanesa napolitana with salad in the dining room at night'}" width="800" height="1067" loading="lazy"></div>
 <div>
-<h2>{'Grupos, agencias y guías' if es else 'Groups, agencies and guides'}</h2>
-<p style="margin-top:14px">{'Recibimos grupos de hasta 25 personas con menú cerrado, servido en menos de 30 minutos. Guía y chofer no pagan, emitimos factura A y coordinamos todo por escrito.' if es else 'We host groups of up to 25 people with a set menu, served in under 30 minutes. Guides and drivers eat free, we issue invoices and confirm everything in writing.'}</p>
-<div class="acciones" style="margin-top:22px"><a class="btn btn-wa" href="{RUTAS['agencias'][lang]}">{'Ver la propuesta para grupos' if es else 'See our group offer'}</a></div>
+<h2>{'Agencias, guías y hoteles' if es else 'Agencies, guides and hotels'}</h2>
+<p style="margin-top:14px">{'Recibimos grupos de hasta 25 personas con menú cerrado, servido en menos de 30 minutos. Guía y chofer no pagan, emitimos factura A y coordinamos todo por escrito. Para alojamientos: beneficios para huéspedes y viandas por mayor.' if es else 'We host groups of up to 25 people with a set menu, served in under 30 minutes. Guides and drivers eat free, we issue invoices and confirm everything in writing. For lodgings: guest perks and bulk packed lunches.'}</p>
+<div class="acciones" style="margin-top:22px"><a class="btn btn-wa" href="{RUTAS['agencias'][lang]}">{'Ver condiciones para agencias y hoteles' if es else 'See terms for agencies and hotels'}</a></div>
 </div>
 </div>
 </section>
@@ -269,7 +269,7 @@ def inicio(lang):
 </ul>
 <p class="ayuda" style="margin-top:10px">{'Encargala hasta la noche anterior. Te confirmamos el horario de retiro por WhatsApp. Para alojamientos y agencias hay precio por mayor.' if es else 'Order by the night before. We confirm the pick-up time on WhatsApp. Wholesale prices for lodgings and agencies.'}</p>
 </div>
-<div>{form_viandas(lang)}</div>
+<div><details class="pedir"><summary class="btn btn-wa">{ICONO_WA}{'Encargar viandas' if es else 'Order packed lunches'}</summary>{form_viandas(lang)}</details></div>
 </div>
 </section>
 <section class="seccion alt" id="ubicacion">
@@ -349,7 +349,7 @@ def agencias(lang):
     platos = "".join(f"<li>{e(a if es else b)}</li>" for a, b in PLATOS_AGENCIAS)
     msg_empezar = ("Hola, vi la web de Andreas. Trabajo en una agencia y quiero empezar a trabajar con ustedes." if es else
                    "Hi, I saw the Andreas website. I work for an agency and would like to start working with you.")
-    titulo = "Grupos y agencias | Andreas, El Chaltén" if es else "Groups and agencies | Andreas, El Chaltén"
+    titulo = "Agencias, guías y hoteles | Andreas, El Chaltén" if es else "Agencies, guides and hotels | Andreas, El Chaltén"
     desc = ("Menú grupal para agencias y guías en El Chaltén: hasta 25 personas, servido en menos de 30 minutos, guía y chofer sin cargo, factura A." if es else
             "Group menu for agencies and guides in El Chaltén: up to 25 people, served in under 30 minutes, guides and drivers eat free.")
     pasos = [
@@ -362,79 +362,92 @@ def agencias(lang):
     ]
     pasos_html = "".join(f"<li><b>{e(a if es else c)}</b><span>{e(b if es else d)}</span></li>" for a, b, c, d in pasos)
     h = head(lang, "agencias", titulo, desc) + header(lang, "agencias")
-    h += f"""<section class="hero">
+    pasos4 = [
+        ("Reservá con 24 horas", "Por WhatsApp, mail o el formulario de esta página.", "Book 24 hours ahead", "On WhatsApp, by email or with the form on this page."),
+        ("Elegí los platos", "Hasta la noche anterior. Lo confirmamos por escrito.", "Choose the dishes", "By the night before. We confirm in writing."),
+        ("Servimos en menos de 30 minutos", "Mesa armada antes de que llegue el grupo.", "Served in under 30 minutes", "Tables are set before the group arrives."),
+        ("Factura A y pago a 72 h", "Factura dentro de las 72 h hábiles del servicio; pago dentro de las 72 h hábiles de recibida.", "Invoice and payment", "Invoice within 72 business hours; payment within 72 business hours of receipt."),
+    ]
+    pasos_html = "".join(f"<li><b>{e(a if es else c)}</b><span>{e(b if es else d)}</span></li>" for a, b, c, d in pasos4)
+    def ficha(filas_):
+        return '<dl class="spec">' + "".join(f"<dt>{e(k)}</dt><dd>{v}</dd>" for k, v in filas_) + "</dl>"
+    ficha_ag = ficha([
+        ("Capacidad" if es else "Capacity", "Hasta 25 personas sentadas adentro. Patio extra con buen clima." if es else "Up to 25 seated indoors. Extra patio seating in good weather."),
+        ("Tiempo de servicio" if es else "Service time", "Menos de 30 minutos, con menú único y horario confirmado." if es else "Under 30 minutes, with a single set menu and a confirmed time."),
+        ("Guía y chofer" if es else "Guide and driver", "Comen sin cargo desde 4 pasajeros." if es else "Eat free from 4 passengers."),
+        ("Facturación" if es else "Invoicing", "Factura A dentro de las 72 h hábiles del servicio. Pago dentro de las 72 h hábiles de recibida." if es else "Invoice within 72 business hours of the service. Payment within 72 business hours of receipt."),
+        ("Viandas" if es else "Packed lunches", e(VIANDA[1] if es else VIANDA[2]) + (" Listas a la hora que nos digas." if es else " Ready at the time you set.")),
+        ("Idiomas y horario" if es else "Languages and hours", "Español e inglés. Todos los días de 12 a 24 h; fuera de horario, a coordinar." if es else "Spanish and English. Every day from 12 noon to midnight; other times on request."),
+    ])
+    ficha_ho = ficha([
+        ("Para tus huéspedes" if es else "For your guests", "10% de descuento en el salón presentando la reserva o la llave." if es else "10% off in the restaurant when they show their booking or room key."),
+        ("Para tu recepción" if es else "For your front desk", "Una comida sin cargo para que nos conozcan. Después, 10% de descuento para el personal." if es else "A free meal so your team gets to know us. After that, 10% off for staff."),
+        ("Viandas por mayor" if es else "Bulk packed lunches", "Dos sándwiches, un brownie y un agua, o la supervianda con sándwich de milanesa. Precio por mayor para que las revendas con tu margen. Pedido la noche anterior." if es else "Two sandwiches, a brownie and water, or the super pack with a milanesa sandwich. Wholesale price so you can resell with your margin. Order the night before."),
+        ("Tu link de socio" if es else "Your partner link", "Lo que tus huéspedes reservan con tu link queda a tu nombre." if es else "Bookings your guests make with your link are recorded under your name."),
+    ])
+    h += f"""<section class="hero hero-b2b">
 <div class="wrap">
 <div>
-<h1>{'Tu grupo, servido en menos de 30 minutos.' if es else 'Your group, served in under 30 minutes.'}</h1>
-<p class="bajada">{'Menú cerrado para agencias, guías y transportes en el centro de El Chaltén. Tarifas preferenciales por persona, pensadas para que tu empresa sume su margen.' if es else 'Set menus for agencies, guides and transport companies in the centre of El Chaltén. Preferential per-person rates, designed so your company can add its own margin.'}</p>
+<h1>{'Comidas para grupos y viandas para tus huéspedes, en el centro de El Chaltén.' if es else 'Group meals and packed lunches for your guests, in the centre of El Chaltén.'}</h1>
+<p class="bajada">{'Trabajamos con agencias, guías, transportes y alojamientos. Servimos en menos de 30 minutos, facturamos y confirmamos todo por escrito.' if es else 'We work with agencies, guides, transport companies and lodgings. We serve in under 30 minutes, invoice, and confirm everything in writing.'}</p>
 <div class="acciones">
-{btn_wa('Empezar a trabajar juntos' if es else 'Start working with us', msg_empezar)}
-<a class="btn btn-linea" href="#reservar-grupo">{'Reservar un grupo' if es else 'Book a group'}</a>
+<a class="btn btn-wa" href="#reservar-grupo">{'Reservar un grupo' if es else 'Book a group'}</a>
+{btn_wa('Escribirnos por WhatsApp' if es else 'Message us on WhatsApp', msg_empezar, 'btn btn-linea')}
 </div>
+<ul class="confianza"><li>{N['rating'] if es else N['rating_en']} {'en Google' if es else 'on Google'}</li><li>{'Más de' if es else 'Over'} {N['resenas']} {'reseñas' if es else 'reviews'}</li><li>{'Factura A' if es else 'Invoices'}</li><li>{'Español e inglés' if es else 'Spanish and English'}</li></ul>
 </div>
 <figure><img src="/img/milanesa-napolitana-800.webp" alt="{'Milanesa napolitana con ensalada' if es else 'Milanesa napolitana with salad'}" width="800" height="1067"></figure>
 </div>
+<div class="wrap"><nav class="caminos" aria-label="{'Elegí tu perfil' if es else 'Choose your profile'}">
+<a class="camino" href="#agencias"><b>{'Agencias, guías y transportes' if es else 'Agencies, guides and transport'}</b><span>{'Menú grupal, tiempos y facturación' if es else 'Group menu, timing and invoicing'}</span></a>
+<a class="camino" href="#hoteles"><b>{'Hoteles, hostels y alojamientos' if es else 'Hotels, hostels and lodges'}</b><span>{'Beneficios para huéspedes y viandas por mayor' if es else 'Guest perks and bulk packed lunches'}</span></a>
+</nav></div>
 </section>
-<section class="seccion">
+<section class="seccion" id="agencias">
 <div class="wrap">
-<h2>{'Lo que necesitás saber' if es else 'What you need to know'}</h2>
-<div class="datos">
-<div class="dato"><b>{'Hasta 25' if es else 'Up to 25'}</b><span>{'personas sentadas adentro. Patio extra con buen clima.' if es else 'seated indoors. Extra patio seating in good weather.'}</span></div>
-<div class="dato"><b>{'Menos de 30 min' if es else 'Under 30 min'}</b><span>{'con menú único y horario confirmado.' if es else 'with a single set menu and a confirmed time.'}</span></div>
-<div class="dato"><b>{'Sin cargo' if es else 'Free'}</b><span>{'la comida de guía y chofer, desde 4 pasajeros.' if es else 'meals for guides and drivers, from 4 passengers.'}</span></div>
-<div class="dato"><b>{'Factura A' if es else 'Invoices'}</b><span>{'Emitimos factura A dentro de las 72 horas hábiles del servicio. El pago se hace dentro de las 72 horas hábiles de recibida la factura.' if es else 'We issue an invoice within 72 business hours of the service. Payment is due within 72 business hours of receiving the invoice.'}</span></div>
-</div>
-<p>{'Atención en español e inglés. Estacionamiento para el transporte. Podemos recibir grupos fuera del horario habitual si lo coordinamos antes.' if es else 'Service in Spanish and English. Parking for your vehicle. We can host groups outside regular hours if arranged in advance.'}</p>
-</div>
-</section>
-<section class="seccion alt">
-<div class="wrap dividido" style="align-items:start">
+<h2>{'Agencias, guías y transportes' if es else 'Agencies, guides and transport'}</h2>
+{ficha_ag}
+<div class="dividido" style="align-items:start;margin-top:40px">
 <div>
-<h2>{'Menús para grupos' if es else 'Group menus'}</h2>
-<p style="margin-top:12px">{'Trabajamos con tarifas preferenciales para agencias, guías y transportes. Pedilas por WhatsApp y te las enviamos con las condiciones.' if es else 'We offer preferential rates for agencies, guides and transport companies. Ask on WhatsApp and we send them with our terms.'}</p>
-<table class="tarifas" style="margin-top:20px">
-<thead><tr><th>{'Modalidad' if es else 'Option'}</th></tr></thead>
-<tbody>{filas}</tbody>
-</table>
-<div class="acciones" style="margin-top:18px">{btn_wa('Pedir tarifas para agencias' if es else 'Request agency rates', ('Hola, vi la web de Andreas. Trabajo en una agencia y quiero recibir las tarifas para grupos.' if es else 'Hi, I saw the Andreas website. I work for an agency and would like your group rates.'))}</div>
+<h3>{'Menús para grupos' if es else 'Group menus'}</h3>
+{ficha([(a if es else b, e(c if es else d)) for a, b, c, d, pr in MENU_AGENCIAS])}
+<p style="margin-top:14px">{'Tarifas preferenciales por persona, para que tu empresa sume su margen. Te las enviamos con las condiciones.' if es else 'Preferential per-person rates so your company can add its margin. We send them with our terms.'}</p>
+<div class="acciones" style="margin-top:16px">{btn_wa('Pedir tarifas para agencias' if es else 'Request agency rates', ('Hola, vi la web de Andreas. Trabajo en una agencia y quiero recibir las tarifas para grupos.' if es else 'Hi, I saw the Andreas website. I work for an agency and would like your group rates.'))}</div>
 <p style="margin-top:12px;font-size:.95rem">{'O por mail:' if es else 'Or by email:'} <a href="mailto:{N['mail']}?subject={'Tarifas para agencias' if es else 'Agency rates'}">{N['mail']}</a></p>
 </div>
 <div>
 <h3>{'Platos a elegir' if es else 'Main course options'}</h3>
 <ul class="lista" style="margin-top:12px">{platos}</ul>
-<h3 style="margin-top:28px">{'Viandas para la excursión' if es else 'Packed lunches'}</h3>
-<p style="margin-top:8px">{e(VIANDA[1] if es else VIANDA[2])} {'Listas a la hora que nos digas.' if es else 'Ready at the time you set.'}</p>
-<h3 style="margin-top:28px" id="viandas">{'Viandas por mayor para alojamientos' if es else 'Bulk packed lunches for hostels and lodges'}</h3>
-<p style="margin-top:8px">{'Encargá viandas para tus huéspedes y revendelas con tu margen. Dos sándwiches, un brownie y un agua, o la supervianda con sándwich de milanesa. Pedido la noche anterior, retiro a la hora que coordinemos.' if es else 'Order packed lunches for your guests and resell them with your margin. Two sandwiches, a brownie and water, or the super pack with a milanesa sandwich. Order the night before, pick up at the time we agree.'}</p>
-<div class="acciones" style="margin-top:14px">{btn_wa('Pedir precio de viandas' if es else 'Ask for packed lunch prices', ('Hola, vi la web de Andreas. Tengo un alojamiento y quiero el precio de las viandas por mayor.' if es else 'Hi, I saw the Andreas website. I run a lodging and would like your bulk packed lunch prices.'), 'btn btn-linea')}</div>
+</div>
+</div>
+</div>
+</section>
+<section class="seccion alt" id="hoteles">
+<div class="wrap">
+<h2 id="viandas">{'Hoteles, hostels y alojamientos' if es else 'Hotels, hostels and lodges'}</h2>
+{ficha_ho}
+<div class="acciones" style="margin-top:24px">
+<a class="btn btn-wa" href="{RUTAS['socios'][lang]}">{'Quiero mi link de socio' if es else 'Get my partner link'}</a>
+{btn_wa('Pedir precio de viandas por mayor' if es else 'Ask for wholesale lunch prices', ('Hola, vi la web de Andreas. Tengo un alojamiento y quiero el precio de las viandas por mayor.' if es else 'Hi, I saw the Andreas website. I run a lodging and would like your wholesale packed lunch prices.'), 'btn btn-linea')}
 </div>
 </div>
 </section>
 <section class="seccion">
 <div class="wrap">
-<h2>{'Cómo funciona' if es else 'How it works'}</h2>
-<ol class="pasos" style="margin-top:24px">{pasos_html}</ol>
+<h2>{'Cómo trabajamos con grupos' if es else 'How group bookings work'}</h2>
+<ol class="pasos pasos-4" style="margin-top:24px">{pasos_html}</ol>
 </div>
 </section>
 <section class="seccion alt">
 <div class="wrap">
 <div class="cabeza"><div><h2>{'Rápido y abundante, según quienes ya vinieron' if es else 'Fast and generous, say our guests'}</h2></div>{puntaje(lang)}</div>
-{resenas_html(lang, [3,5,2,7])}
-</div>
-</section>
-<section class="seccion socios-cta">
-<div class="wrap dividido" style="align-items:center">
-<div>
-<h2>{'Registrate como socio y reservá con tu link' if es else 'Sign up as a partner and book with your own link'}</h2>
-<p style="margin-top:12px">{'Hoteles, hostels, agencias, guías y transportes: te registrás una vez y recibís un link propio. Cada mesa o grupo que reserves o recomiendes con ese link queda a tu nombre.' if es else 'Hotels, hostels, agencies, guides and transport companies: sign up once and get your own link. Every table or group you book or recommend with it is recorded under your name.'}</p>
-</div>
-<div class="acciones"><a class="btn btn-wa" href="{RUTAS['socios'][lang]}">{'Quiero mi link de socio' if es else 'Get my partner link'}</a></div>
+{resenas_html(lang, [3,5])}
 </div>
 </section>
 <section class="seccion" id="reservar-grupo">
 <div class="wrap">
 <h2>{'Reservar un grupo' if es else 'Book a group'}</h2>
-<p style="margin-top:12px">{'Completá los datos: queda registrado en nuestro sistema y se abre WhatsApp para que lo envíes. Te confirmamos por escrito.' if es else 'Fill in the details: the request is saved in our system and WhatsApp opens so you can send it. We confirm in writing.'}</p>
+<p style="margin-top:12px">{'Completá los datos y se abre WhatsApp con el pedido armado. Te confirmamos por escrito.' if es else 'Fill in the details and WhatsApp opens with your request ready. We confirm in writing.'}</p>
 {form_grupo(lang)}
 </div>
 </section>

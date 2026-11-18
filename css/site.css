@@ -381,3 +381,32 @@ p{margin:0 0 .8em;max-width:62ch}
 @media (max-width:860px) and (prefers-reduced-motion:reduce){.barra-movil{transition:none}
 }
 .precios-vianda li{font-size:1.15rem;padding:6px 0;border-bottom:1px solid rgba(33,31,32,.12)}
+/* Agencias y hoteles */
+.hero-b2b h1{font-size:clamp(2rem,4.2vw,3.2rem)}
+.confianza{list-style:none;padding:0;margin:26px 0 0;display:flex;flex-wrap:wrap;gap:8px 22px;font-size:.95rem;color:rgba(239,243,218,.78)}
+.confianza li{position:relative}
+.confianza li+li::before{content:"";position:absolute;left:-12px;top:.55em;width:4px;height:4px;border-radius:50%;background:var(--rojo)}
+.caminos{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;padding-bottom:40px}
+.camino{display:block;padding:18px 0;border-top:1px solid rgba(239,243,218,.22);color:var(--crema);text-decoration:none}
+.camino b{display:block;font-size:1.15rem}
+.camino span{color:rgba(239,243,218,.7);font-size:.95rem}
+.camino:hover b,.camino:focus-visible b{text-decoration:underline;text-decoration-color:var(--rojo);text-underline-offset:4px}
+.spec{display:grid;grid-template-columns:minmax(150px,240px) 1fr;margin:24px 0 0;border-top:2px solid var(--carbon)}
+.spec dt,.spec dd{margin:0;padding:16px 0;border-bottom:1px solid var(--linea)}
+.spec dt{font-weight:700;padding-right:24px}
+.spec dd{color:var(--carbon)}
+.pasos-4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:860px){
+  .hero-b2b figure{display:none}
+  .caminos{grid-template-columns:1fr;padding-bottom:28px}
+  .spec{grid-template-columns:1fr}
+  .spec dt{border-bottom:0;padding-bottom:2px}
+  .spec dd{padding-top:0}
+  .pasos-4{grid-template-columns:1fr}
+}
+.hero-b2b .wrap+.wrap{display:block;padding-top:0;padding-bottom:0}
+.hero-b2b .wrap:first-child{padding-bottom:36px}
+details.pedir{margin-top:20px}
+details.pedir>summary{list-style:none;cursor:pointer;display:inline-flex}
+details.pedir>summary::-webkit-details-marker{display:none}
+details.pedir[open]>summary{display:none}
