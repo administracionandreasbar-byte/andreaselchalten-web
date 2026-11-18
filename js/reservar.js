@@ -9,8 +9,8 @@
     viento: 'The patio is closed due to wind at that time. Choose a table inside.',
     anticipacion: 'To choose a specific table, book at least 12 hours ahead. For today, write to us on WhatsApp.',
     faltan: 'Please fill in the highlighted fields.', limite: 'Too many bookings from this connection today. Write to us on WhatsApp.',
-    error: 'Something went wrong. Try again or write to us on WhatsApp.', enviando: 'Booking…',
-    listo: 'Booked!', listoTxt: 'We are expecting you', cambiar: 'If your plans change, let us know on WhatsApp.',
+    error: 'Something went wrong. Try again or write to us on WhatsApp.', enviando: 'Opening WhatsApp…', boton: 'Book on WhatsApp',
+    listo: 'Almost done', listoTxt: 'Send the WhatsApp message that just opened and we confirm your table for', cambiar: 'If your plans change, let us know on WhatsApp.',
     sinSistema: 'Online booking is not active yet. Send it on WhatsApp and we confirm right away.', wa: 'Send on WhatsApp',
     personas: function (n) { return n + (n === 1 ? ' person' : ' people'); },
     dias: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], a: 'at'
@@ -20,8 +20,8 @@
     viento: 'El patio está cerrado por viento en ese horario. Elegí una mesa del salón.',
     anticipacion: 'Para elegir una mesa puntual, reservá con 12 horas de anticipación. Para hoy, escribinos por WhatsApp.',
     faltan: 'Completá los campos marcados.', limite: 'Hiciste muchas reservas hoy desde esta conexión. Escribinos por WhatsApp.',
-    error: 'Algo falló. Probá de nuevo o escribinos por WhatsApp.', enviando: 'Reservando…',
-    listo: '¡Reserva hecha!', listoTxt: 'Te esperamos', cambiar: 'Si cambian tus planes, avisanos por WhatsApp.',
+    error: 'Algo falló. Probá de nuevo o escribinos por WhatsApp.', enviando: 'Abriendo WhatsApp…', boton: 'Reservar por WhatsApp',
+    listo: 'Falta un paso', listoTxt: 'Mandá el mensaje de WhatsApp que se abrió y te confirmamos la mesa para el', cambiar: 'Si cambian tus planes, avisanos por WhatsApp.',
     sinSistema: 'Las reservas online todavía no están activas. Mandala por WhatsApp y te confirmamos enseguida.', wa: 'Enviar por WhatsApp',
     personas: function (n) { return n + (n === 1 ? ' persona' : ' personas'); },
     dias: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'], a: 'a las'
@@ -97,7 +97,7 @@
     return (en ? 'Hi, I want to book from the website.' : 'Hola, quiero reservar desde la web.') + '\n' +
       T.mesa + ': ' + elegida.label + ' (' + (elegida.zona === 'patio' ? T.patio : T.salon) + ')\n' +
       fecha.value.split('-').reverse().join('/') + ' ' + hora.value + ' · ' + T.personas(+pax.value) + '\n' +
-      $('#r-nombre').value + ' · ' + $('#r-email').value;
+      $('#r-nombre').value + ($('#r-email').value ? ' · ' + $('#r-email').value : '');
   }
 
   form.addEventListener('submit', function (ev) {
@@ -106,21 +106,29 @@
     if (!elegida) return;
     if (!form.checkValidity()) { err.textContent = T.faltan; err.hidden = false; var x = form.querySelector(':invalid'); if (x) x.focus(); return; }
     if (inicio(fecha.value, hora.value) < ahoraMas12()) { err.textContent = T.anticipacion; err.hidden = false; return; }
-    if (sinSistema) return ofrecerWA();
+    // La reserva se confirma por WhatsApp. Antes se guarda una copia en la planilla (Notion) si está conectada;
+    // si la planilla no responde en 2,5 s, igual se abre WhatsApp.
     boton.disabled = true; boton.textContent = T.enviando;
-    fetch('/api/reservas', { method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ mesa: elegida.id, fecha: fecha.value, hora: hora.value, personas: +pax.value, nombre: $('#r-nombre').value.trim(), email: $('#r-email').value.trim(), lang: en ? 'en' : 'es', origen: (function () { try { return sessionStorage.getItem('origen') || ''; } catch (e) { return ''; } })() })
+    var origen = (function () { try { return sessionStorage.getItem('origen') || ''; } catch (e) { return ''; } })();
+    var listoYa = false;
+    var abrirWA = function () {
+      if (listoYa) return; listoYa = true;
+      boton.disabled = false; boton.textContent = T.boton;
+      confirmar();
+      window.location.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(textoWA() + (origen ? '\n' + (en ? 'Source: ' : 'Origen: ') + origen : ''));
+    };
+    var corte = setTimeout(abrirWA, 2500);
+    fetch('/api/reservas', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ mesa: elegida.id, fecha: fecha.value, hora: hora.value, personas: +pax.value, nombre: $('#r-nombre').value.trim(), email: $('#r-email').value.trim(), lang: en ? 'en' : 'es', origen: origen })
     }).then(function (r) { return r.json().then(function (d) { return { st: r.status, d: d }; }, function () { return { st: r.status, d: {} }; }); })
       .then(function (res) {
-        boton.disabled = false; boton.textContent = en ? 'Book' : 'Reservar';
-        if (res.st === 200 && res.d.ok) return confirmar();
-        if (res.st === 503 || res.st === 404) { sinSistema = true; return ofrecerWA(); }
-        if (res.d.error === 'ocupada') { cargarOcupadas(); err.textContent = T.ocupada; }
-        else if (res.d.error === 'anticipacion') err.textContent = T.anticipacion;
-        else if (res.d.error === 'limite') err.textContent = T.limite;
-        else err.textContent = T.error;
-        err.hidden = false;
-      }).catch(function () { boton.disabled = false; boton.textContent = en ? 'Book' : 'Reservar'; err.textContent = T.error; err.hidden = false; });
+        if (listoYa) return;
+        if (res.st === 409 && res.d.error === 'ocupada') {
+          clearTimeout(corte); listoYa = true; boton.disabled = false; boton.textContent = T.boton;
+          cargarOcupadas(); err.textContent = T.ocupada; err.hidden = false; return;
+        }
+        clearTimeout(corte); abrirWA();
+      }, function () { clearTimeout(corte); abrirWA(); });
   });
 
   function confirmar() {
@@ -129,6 +137,7 @@
     pasos.hidden = true;
     listo.innerHTML = '<p class="listo-titulo">' + T.listo + '</p><p>' + T.listoTxt + ' <b>' + cuando + '</b>, ' + T.mesa.toLowerCase() + ' <b>' + elegida.label + '</b>, ' + T.personas(+pax.value) + '.</p><p class="ayuda">' + T.cambiar + ' <a href="https://wa.me/' + WA + '">WhatsApp</a></p>';
     listo.hidden = false; listo.focus();
+    listo.insertAdjacentHTML('beforeend', '<p><a class="btn btn-wa" href="https://wa.me/' + WA + '?text=' + encodeURIComponent(textoWA()) + '">' + T.wa + '</a></p>');
     ocupadas.push({ mesa: elegida.id, hora: hora.value }); revisar();
   }
   function ofrecerWA() {

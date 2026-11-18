@@ -258,6 +258,16 @@ def inicio(lang):
 </div>
 </div>
 </section>
+<section class="seccion" id="viandas">
+<div class="wrap dividido">
+<div>
+<h2>{'Viandas para el sendero' if es else 'Packed lunches for the trail'}</h2>
+<p style="margin-top:14px">{'Dos sándwiches (jamón y queso, o queso, lechuga y tomate), un brownie y un agua. La supervianda trae sándwich de milanesa. Encargala hasta la noche anterior y pasá a buscarla a la hora que elijas.' if es else 'Two sandwiches (ham and cheese, or cheese, lettuce and tomato), a brownie and water. The super pack comes with a milanesa sandwich. Order by the night before and pick it up whenever you want.'}</p>
+<p class="ayuda" style="margin-top:10px">{'Te confirmamos el precio y el horario por WhatsApp. Para alojamientos y agencias hay precio por mayor.' if es else 'We confirm the price and pick-up time on WhatsApp. Wholesale prices for lodgings and agencies.'}</p>
+</div>
+<div>{form_viandas(lang)}</div>
+</div>
+</section>
 <section class="seccion alt" id="ubicacion">
 <div class="wrap dividido">
 <div>
@@ -280,6 +290,7 @@ def inicio(lang):
 <li><a href="#happy-hour"><span>Happy Hour</span></a></li>
 <li><a href="#resenas"><span>{'Reseñas' if es else 'Reviews'}</span></a></li>
 <li><a href="#grupos"><span>{'Grupos y agencias' if es else 'Groups'}</span></a></li>
+<li><a href="#viandas"><span>{'Viandas' if es else 'Packed lunches'}</span></a></li>
 <li><a href="#ubicacion"><span>{'Cómo llegar' if es else 'Find us'}</span></a></li>
 <li class="indice-cta"><a href="{RUTAS['reservas'][lang]}">{'Reservar mesa' if es else 'Book a table'}</a></li>
 </ol>
@@ -320,6 +331,7 @@ def menu(lang):
 <nav class="chips" aria-label="{'Secciones del menú' if es else 'Menu sections'}"><div class="wrap">{chips}</div></nav>
 <div class="carta"><div class="wrap">
 {''.join(secciones)}
+<div class="acciones" style="margin:28px 0 8px"><a class="btn btn-wa" href="{RUTAS['inicio'][lang]}#viandas">{'Encargá viandas para el sendero' if es else 'Order packed lunches for the trail'}</a></div>
 <p class="aviso">{'¿Alergias o restricciones? Avisale al mozo antes de pedir. La Corinto es vegetariana; no tenemos platos veganos.' if es else 'Allergies or dietary needs? Tell your server before ordering. The Corinto burger is vegetarian; we have no vegan dishes.'}<br>{T[lang]['legal']}</p>
 </div></div>
 """
@@ -441,6 +453,41 @@ def form_grupo(lang):
 <div class="full"><button class="btn btn-wa" type="submit">{ICONO_WA}{'Enviar por WhatsApp' if es else 'Send on WhatsApp'}</button></div>
 </form>"""
 
+def form_viandas(lang):
+    es = lang == "es"
+    intro = "Hola, quiero encargar viandas." if es else "Hi, I want to order packed lunches."
+    tipos = [("Vianda", "Packed lunch"), ("Supervianda", "Super pack"), ("Mitad y mitad", "Half and half")]
+    op = "".join(f'<option>{e(a if es else b)}</option>' for a, b in tipos)
+    return f"""<form class="form" data-wa="{e(intro)}" data-api="grupo" data-prefijo="v" data-tipo="Viandas" novalidate style="margin-top:24px">
+<div class="full"><label for="v-agencia">{'Tu nombre o el de tu alojamiento' if es else 'Your name or your lodging'}</label><input id="v-agencia" required data-etiqueta="{'Nombre' if es else 'Name'}" autocomplete="name"></div>
+<div><label for="v-menu">{'Qué vianda' if es else 'Which pack'}</label><select id="v-menu" required data-etiqueta="{'Vianda' if es else 'Pack'}"><option value="">{'Elegí una opción' if es else 'Choose an option'}</option>{op}</select></div>
+<div><label for="v-pax">{'Cantidad' if es else 'How many'}</label><input id="v-pax" type="number" min="1" max="200" required inputmode="numeric" data-etiqueta="{'Cantidad' if es else 'Quantity'}"></div>
+<div><label for="v-fecha">{'Día de retiro' if es else 'Pick-up day'}</label><input id="v-fecha" type="date" required data-etiqueta="{'Retiro' if es else 'Pick-up'}"></div>
+<div><label for="v-hora">{'Hora de retiro' if es else 'Pick-up time'}</label><input id="v-hora" type="time" required data-etiqueta="{'Hora' if es else 'Time'}"></div>
+<div class="full"><label for="v-notas">{'Comentarios' if es else 'Notes'}</label><textarea id="v-notas" data-etiqueta="{'Comentarios' if es else 'Notes'}" placeholder="{'Cuántas vegetarianas, a qué sendero vas, etc.' if es else 'How many vegetarian, which trail, etc.'}"></textarea></div>
+<p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>
+<div class="full"><button class="btn btn-wa" type="submit">{ICONO_WA}{'Pedir viandas por WhatsApp' if es else 'Order on WhatsApp'}</button></div>
+</form>"""
+
+def form_evento(lang):
+    es = lang == "es"
+    intro = "Hola, quiero reservar una mesa grande." if es else "Hi, I want to book a large table."
+    tipos = [("Cumpleaños", "Birthday"), ("Reunión de equipo", "Team gathering"), ("Evento", "Event"), ("Mesa grande", "Large table")]
+    op = "".join(f'<option>{e(a if es else b)}</option>' for a, b in tipos)
+    zonas = [("", "Me da igual", "No preference"), ("Salón", "Salón", "Indoors"), ("Patio", "Patio", "Patio")]
+    oz = "".join(f'<option value="{v}">{e(a if es else b)}</option>' for v, a, b in zonas)
+    return f"""<form class="form" data-wa="{e(intro)}" data-api="grupo" data-prefijo="e" data-tipo="Evento" novalidate style="margin-top:24px">
+<div class="full"><label for="e-agencia">{'Nombre' if es else 'Name'}</label><input id="e-agencia" required data-etiqueta="{'Nombre' if es else 'Name'}" autocomplete="name"></div>
+<div><label for="e-tipo">{'Qué festejan o qué necesitan' if es else 'What is the occasion'}</label><select id="e-tipo" required data-etiqueta="{'Tipo' if es else 'Type'}"><option value="">{'Elegí una opción' if es else 'Choose an option'}</option>{op}</select></div>
+<div><label for="e-zona">{'Dónde' if es else 'Where'}</label><select id="e-zona" data-etiqueta="{'Lugar' if es else 'Area'}">{oz}</select></div>
+<div><label for="e-fecha">{'Fecha' if es else 'Date'}</label><input id="e-fecha" type="date" required data-etiqueta="{'Fecha' if es else 'Date'}"></div>
+<div><label for="e-hora">{'Hora' if es else 'Time'}</label><input id="e-hora" type="time" required data-etiqueta="{'Hora' if es else 'Time'}"></div>
+<div><label for="e-pax">{'Personas' if es else 'People'}</label><input id="e-pax" type="number" min="7" max="49" required inputmode="numeric" data-etiqueta="{'Personas' if es else 'People'}"><p class="ayuda">{'Desde 7 personas.' if es else 'From 7 people.'}</p></div>
+<div class="full"><label for="e-notas">{'Comentarios' if es else 'Notes'}</label><textarea id="e-notas" data-etiqueta="{'Comentarios' if es else 'Notes'}" placeholder="{'Torta propia, decoración, menú, restricciones, etc.' if es else 'Own cake, decorations, menu, dietary needs, etc.'}"></textarea></div>
+<p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>
+<div class="full"><button class="btn btn-wa" type="submit">{ICONO_WA}{'Pedir la mesa por WhatsApp' if es else 'Request it on WhatsApp'}</button></div>
+</form>"""
+
 # ---------------- RESERVAS ----------------
 def plano_svg(zona, lang):
     es = lang == "es"
@@ -502,7 +549,8 @@ def reservas(lang):
     h = head(lang, "reservas", titulo, desc) + header(lang, "reservas")
     h += f"""<section class="menu-hero"><div class="wrap">
 <h1>{'Elegí tu mesa' if es else 'Pick your table'}</h1>
-<p>{'Tocá una mesa en el plano. Después elegís día y hora, y listo.' if es else 'Tap a table on the plan, then choose the day and time. That is it.'}</p>
+<p>{'Tocá una mesa en el plano, elegí día y hora, y confirmamos por WhatsApp.' if es else 'Tap a table on the plan, choose the day and time, and we confirm on WhatsApp.'}</p>
+<p style="margin-top:10px"><a href="#mesa-grande">{'¿Son 7 o más, un cumpleaños o un evento? Pedí una mesa grande.' if es else '7 or more people, a birthday or an event? Request a large table.'}</a></p>
 </div></section>
 <section class="seccion reservar" data-reservar data-lang="{lang}">
 <div class="wrap reservar-grid">
@@ -526,14 +574,23 @@ def reservas(lang):
 <div class="full estado-mesa" data-estado-mesa hidden></div>
 <div class="full vereda" data-vereda hidden aria-live="polite"></div>
 <div class="full"><label for="r-nombre">{'Nombre' if es else 'Name'}</label><input id="r-nombre" required autocomplete="name"></div>
-<div class="full"><label for="r-email">{'Correo electrónico' if es else 'Email'}</label><input id="r-email" type="email" required autocomplete="email"></div>
+<div class="full"><label for="r-email">{'Correo (opcional)' if es else 'Email (optional)'}</label><input id="r-email" type="email" autocomplete="email"></div>
 <label class="check full"><input id="r-ok" type="checkbox" required> <span>{'Acepto que Andreas use estos datos solo para gestionar mi reserva (ley 25.326).' if es else 'I agree that Andreas will use this information only to manage my booking.'}</span></label>
 <p class="error full" hidden role="alert" data-error></p>
-<div class="full"><button class="btn btn-wa" type="submit" data-enviar>{'Reservar' if es else 'Book'}</button></div>
+<div class="full"><button class="btn btn-wa" type="submit" data-enviar>{ICONO_WA}{'Reservar por WhatsApp' if es else 'Book on WhatsApp'}</button></div>
 </div>
 </div>
 <div class="listo" data-listo hidden tabindex="-1"></div>
 </form>
+</div>
+</section>
+<section class="seccion alt" id="mesa-grande">
+<div class="wrap dividido">
+<div>
+<h2>{'Mesas grandes, cumpleaños y eventos' if es else 'Large tables, birthdays and events'}</h2>
+<p style="margin-top:14px">{'Para 7 personas o más armamos una mesa especial, adentro o en el patio, fuera del plano. Contanos qué festejan y lo preparamos.' if es else 'For 7 or more people we set up a special table, indoors or on the patio, outside the floor plan. Tell us the occasion and we will get it ready.'}</p>
+</div>
+<div>{form_evento(lang)}</div>
 </div>
 </section>
 <script src="/js/reservar.js" defer></script>

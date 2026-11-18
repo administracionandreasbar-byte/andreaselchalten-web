@@ -166,7 +166,7 @@ async function reservar(request, env) {
   try { d = await request.json(); } catch { return json({ error: 'datos' }, 400); }
   const { mesa, fecha, hora, personas: pax, nombre, email } = d || {};
   if (!ETIQUETAS[mesa] || !/^\d{4}-\d{2}-\d{2}$/.test(fecha || '') || !/^\d{2}:\d{2}$/.test(hora || '')
-      || !limpiar(nombre, 80) || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email || '') || !(pax >= 1 && pax <= 25)) {
+      || !limpiar(nombre, 80) || (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) || !(pax >= 1 && pax <= 25)) {
     return json({ error: 'datos' }, 400);
   }
   const inicio = Date.parse(`${fecha}T${hora}:00-03:00`);
@@ -185,7 +185,7 @@ async function reservar(request, env) {
     'Personas': { number: Number(pax) },
     'Tipo': sel('Mesa web'), 'Estado': sel('Confirmada'),
     'Mesa': sel(etiqueta), 'Zona': sel(zona),
-    'Correo': { email: limpiar(email, 120) },
+    'Correo': { email: email ? limpiar(email, 120) : null },
     'Origen': sel(origen || 'Directo'),
     'Idioma': sel(d.lang === 'en' ? 'Inglés' : 'Español')
   };
@@ -207,7 +207,7 @@ async function grupo(request, env) {
   const agencia = limpiar(d.agencia, 80);
   const fecha = /^\d{4}-\d{2}-\d{2}$/.test(d.fecha || '') ? d.fecha : null;
   const hora = /^\d{2}:\d{2}$/.test(d.hora || '') ? d.hora : '12:00';
-  const pax = Math.max(1, Math.min(60, parseInt(d.personas, 10) || 0));
+  const pax = Math.max(1, Math.min(200, parseInt(d.personas, 10) || 0));
   if (!agencia || !fecha || !pax) return json({ error: 'datos' }, 400);
   const origen = limpiar(d.origen, 30).replace(/[^a-z0-9_-]/gi, '').toLowerCase();
   const socio = await socioPorCodigo(env, b, origen).catch(() => null);
@@ -215,7 +215,8 @@ async function grupo(request, env) {
     'Nombre': { title: texto(agencia) },
     'Fecha': { date: { start: `${fecha}T${hora}:00-03:00` } },
     'Personas': { number: pax },
-    'Tipo': sel('Grupo'), 'Estado': sel('Pedido'),
+    'Tipo': sel(['Grupo', 'Evento', 'Viandas'].includes(d.tipo) ? d.tipo : 'Grupo'), 'Estado': sel('Pedido'),
+    'Zona': sel(['Salón', 'Patio'].includes(d.zona) ? d.zona : null),
     'Menú': { rich_text: texto(limpiar(d.menu, 80)) },
     'Notas': { rich_text: texto(limpiar(d.notas, 1000)) },
     'Origen': sel(origen || 'Directo'),
@@ -224,7 +225,7 @@ async function grupo(request, env) {
   if (socio) props['Socio'] = { relation: [{ id: socio.id }] };
   await notion(env, 'pages', 'POST', {
     parent: { database_id: b.reservas }, properties: props,
-    children: await aviso(env, `Pedido de grupo: ${agencia}, ${pax} pasajeros, ${fecha.split('-').reverse().join('/')} ${hora}. Confirmalo por WhatsApp.`)
+    children: await aviso(env, `Pedido (${['Grupo', 'Evento', 'Viandas'].includes(d.tipo) ? d.tipo : 'Grupo'}): ${agencia}, ${pax} ${d.tipo === 'Viandas' ? 'viandas' : 'personas'}, ${fecha.split('-').reverse().join('/')} ${hora}. Confirmalo por WhatsApp.`)
   });
   return json({ ok: true });
 }
@@ -294,7 +295,7 @@ async function instalar(env) {
           'Fecha': { date: {} },
           'Personas': { number: { format: 'number' } },
           'Estado': opciones([['Pedido', 'yellow'], ['Confirmada', 'blue'], ['Vino', 'green'], ['No vino', 'red'], ['Cancelada', 'gray']]),
-          'Tipo': opciones([['Mesa web', 'blue'], ['Grupo', 'purple'], ['Teléfono / local', 'gray'], ['Viandas', 'brown']]),
+          'Tipo': opciones([['Mesa web', 'blue'], ['Grupo', 'purple'], ['Evento', 'pink'], ['Viandas', 'brown'], ['Teléfono / local', 'gray']]),
           'Mesa': opciones(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'A', 'B', 'C'].map(x => [x, 'default'])),
           'Zona': opciones([['Salón', 'red'], ['Patio', 'green']]),
           'Gastó': { number: { format: 'number_with_commas' } },
