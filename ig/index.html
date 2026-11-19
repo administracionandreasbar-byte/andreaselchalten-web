@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Andreas – Food & Drinks for Adventurers</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#211f20">
+<link rel="icon" href="/img/icono-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/site.css">
+</head>
+<body class="ig">
+<main class="ig-wrap">
+<img class="ig-logo" src="/img/logo-1024.png" alt="Andreas – Food & Drinks for Adventurers" width="96" height="96">
+<p class="estado" data-estado><i></i><span>Open daily, noon to midnight</span></p>
+<h1>The day ends at Andreas.<small>La mesa donde termina la aventura.</small></h1>
+<nav class="ig-botones"><a class="ig-btn principal" href="/menu/?ref=instagram" data-en="/en/menu/?ref=instagram"><b>Menu &amp; prices</b><span>Menú con precios</span></a><a class="ig-btn" href="/reservas/?ref=instagram" data-en="/en/reservations/?ref=instagram"><b>Book a table</b><span>Reservar mesa</span></a><a class="ig-btn" href="/?ref=instagram#viandas" data-en="/en/?ref=instagram#viandas"><b>Packed lunches for the trail</b><span>Viandas para el sendero</span></a><a class="ig-btn" href="https://www.google.com/maps/search/?api=1&query=Andreas+Food+and+Drinks+San+Mart%C3%ADn+351+El+Chalt%C3%A9n" data-en="https://www.google.com/maps/search/?api=1&query=Andreas+Food+and+Drinks+San+Mart%C3%ADn+351+El+Chalt%C3%A9n"><b>Directions · San Martín 351</b><span>Cómo llegar</span></a><a class="ig-btn" href="https://wa.me/5491127843427?text=Hola%2C%20vi%20Andreas%20en%20Instagram%20y%20quiero%20consultar%3A%20" data-en="https://wa.me/5491127843427?text=Hi%2C%20I%20found%20Andreas%20on%20Instagram%20and%20I%27d%20like%20to%20ask%3A%20"><b>WhatsApp</b><span>Escribinos</span></a></nav>
+<p class="ig-dato"><b>Happy Hour 4–8 pm</b> · 16 a 20 h</p>
+<p class="ig-dato">4.5 ★ Google · 160+ reviews</p>
+<p class="ig-legal">Drink responsibly. Not sold to anyone under 18. · Beber con moderación. Prohibida su venta a menores de 18 años.</p>
+</main>
+<script>
+(function () {
+  try { var q = new URLSearchParams(location.search).get('ref'); sessionStorage.setItem('origen', (q || 'instagram').replace(/[^a-z0-9_-]/gi, '').slice(0, 30).toLowerCase()); } catch (e) {}
+  var es = /^es/i.test(navigator.language || '');
+  if (!es) document.querySelectorAll('[data-en]').forEach(function (a) { a.href = a.dataset.en; });
+})();
+</script>
+<script src="/js/site.js" defer></script>
+</body>
+</html>

@@ -202,7 +202,7 @@ def inicio(lang):
 <div class="wrap portada-texto">
 <p class="estado" data-estado><i></i><span>{'Todos los días de 12 a 24 h' if es else 'Open daily, noon to midnight'}</span></p>
 <h1>{'Del sendero a la mesa.' if es else 'Off the trail. Time to eat.'}</h1>
-<p class="bajada">{'Hamburguesas, milanesas, pizzas caseras y bife, con cerveza tirada. En el centro de El Chaltén, sobre la calle principal.' if es else 'Burgers, milanesas, homemade pizza and steak, with beer on tap. In the centre of El Chaltén, on the main street.'}</p>
+<p class="bajada">{'La mesa donde termina la aventura: hamburguesas, milanesas, pizzas caseras y bife, en la calle principal de El Chaltén.' if es else 'Where the adventure ends: burgers, milanesas, homemade pizza and steak, on the main street of El Chaltén.'}</p>
 <div class="acciones">
 <a class="btn btn-wa" href="{RUTAS['reservas'][lang]}">{'Reservar mesa' if es else 'Book a table'}</a>
 <a class="btn btn-claro" href="{RUTAS['menu'][lang]}">{'Ver el menú' if es else 'See the menu'}</a>
@@ -231,7 +231,8 @@ def inicio(lang):
 {cresta('#c8322a','arriba')}
 <div class="wrap">
 <div class="grande">{'16–20 h' if es else '4–8 pm'}</div>
-<p><b>Happy Hour.</b> {'Dos cervezas por $15.000, todos los días. Ideal para la vuelta del sendero, en el salón calefaccionado o en las mesas de afuera.' if es else 'Two beers for $15,000, every day. Just right after the trail, in our heated dining room or at the outdoor tables.'}</p>
+<p><b>Happy Hour.</b> {'Dos cervezas por $15.000, todos los días, en el salón calefaccionado o en las mesas de afuera.' if es else 'Two beers for $15,000, every day, in our heated dining room or at the outdoor tables.'}</p>
+<p class="legal-hh">{'Beber con moderación. Prohibida su venta a menores de 18 años.' if es else 'Drink responsibly. Not sold to anyone under 18.'}</p>
 <img class="hh-plato" src="/img/plato-milanesa-sm.webp" alt="" width="320" height="320" loading="lazy">
 </div>
 </section>
@@ -242,7 +243,7 @@ def inicio(lang):
 <p>{'Reseñas reales de Google, de octubre y noviembre de 2026.' if es else 'Real Google reviews from October and November 2026.'}</p></div>
 {puntaje(lang)}
 </div>
-{resenas_html(lang, [0,1,2,3,4,5,6,7])}
+{resenas_html(lang, [1,2,3,4,5,6,7])}
 </div>
 </section>
 <section class="seccion grupos" id="grupos" data-tono="oscuro">
@@ -647,6 +648,52 @@ def socios(lang):
 """
     return h + footer(lang, "socios")
 
+# ---------------- LINK DE LA BIO (/ig/) ----------------
+def pagina_ig():
+    def boton(href_es, href_en, en, es_, clase="ig-btn"):
+        return f'<a class="{clase}" href="{href_es}" data-en="{href_en}"><b>{e(en)}</b><span>{e(es_)}</span></a>'
+    botones = "".join([
+        boton("/menu/?ref=instagram", "/en/menu/?ref=instagram", "Menu & prices", "Menú con precios", "ig-btn principal"),
+        boton("/reservas/?ref=instagram", "/en/reservations/?ref=instagram", "Book a table", "Reservar mesa"),
+        boton("/?ref=instagram#viandas", "/en/?ref=instagram#viandas", "Packed lunches for the trail", "Viandas para el sendero"),
+        boton(N["maps"], N["maps"], "Directions · San Martín 351", "Cómo llegar"),
+        boton(wa_link("Hola, vi Andreas en Instagram y quiero consultar: "), wa_link("Hi, I found Andreas on Instagram and I'd like to ask: "), "WhatsApp", "Escribinos"),
+    ])
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Andreas – Food & Drinks for Adventurers</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#211f20">
+<link rel="icon" href="/img/icono-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/site.css">
+</head>
+<body class="ig">
+<main class="ig-wrap">
+<img class="ig-logo" src="/img/logo-1024.png" alt="Andreas – Food & Drinks for Adventurers" width="96" height="96">
+<p class="estado" data-estado><i></i><span>Open daily, noon to midnight</span></p>
+<h1>The day ends at Andreas.<small>La mesa donde termina la aventura.</small></h1>
+<nav class="ig-botones">{botones}</nav>
+<p class="ig-dato"><b>Happy Hour 4–8 pm</b> · 16 a 20 h</p>
+<p class="ig-dato">{N['rating_en']} ★ Google · {N['resenas']}+ reviews</p>
+<p class="ig-legal">Drink responsibly. Not sold to anyone under 18. · Beber con moderación. Prohibida su venta a menores de 18 años.</p>
+</main>
+<script>
+(function () {{
+  try {{ var q = new URLSearchParams(location.search).get('ref'); sessionStorage.setItem('origen', (q || 'instagram').replace(/[^a-z0-9_-]/gi, '').slice(0, 30).toLowerCase()); }} catch (e) {{}}
+  var es = /^es/i.test(navigator.language || '');
+  if (!es) document.querySelectorAll('[data-en]').forEach(function (a) {{ a.href = a.dataset.en; }});
+}})();
+</script>
+<script src="/js/site.js" defer></script>
+</body>
+</html>
+"""
+
 def escribir(ruta, contenido):
     destino = os.path.join(RAIZ, ruta.strip("/"), "index.html") if ruta != "/" else os.path.join(RAIZ, "index.html")
     os.makedirs(os.path.dirname(destino), exist_ok=True)
@@ -658,6 +705,7 @@ for lang in ("es", "en"):
     escribir(RUTAS["menu"][lang], menu(lang))
     escribir(RUTAS["agencias"][lang], agencias(lang))
     escribir(RUTAS["reservas"][lang], reservas(lang))
+escribir("/ig/", pagina_ig())
 
 manifest = {"name": "Andreas – Food & Drinks for Adventurers", "short_name": "Andreas", "start_url": "/", "display": "standalone",
             "background_color": "#f8f9f0", "theme_color": "#211f20",

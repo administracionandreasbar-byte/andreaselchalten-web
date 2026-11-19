@@ -410,3 +410,19 @@ details.pedir{margin-top:20px}
 details.pedir>summary{list-style:none;cursor:pointer;display:inline-flex}
 details.pedir>summary::-webkit-details-marker{display:none}
 details.pedir[open]>summary{display:none}
+.legal-hh{font-size:.8rem;opacity:.75;margin-top:10px}
+/* Link de la bio de Instagram */
+body.ig{background:var(--carbon);color:var(--crema);min-height:100vh}
+.ig-wrap{max-width:440px;margin:0 auto;padding:32px 16px 40px;text-align:center}
+.ig-logo{display:block;margin:0 auto;width:96px;height:96px;border-radius:50%}
+.ig .estado{justify-content:center;margin:14px 0 4px}
+.ig h1{font-size:1.9rem;line-height:1.15;margin:8px 0 24px}
+.ig h1 small{display:block;font-size:1rem;font-weight:600;opacity:.75;margin-top:8px}
+.ig-botones{display:grid;gap:12px}
+.ig-btn{display:block;padding:14px 18px;border-radius:16px;border:1.5px solid rgba(239,243,218,.35);color:var(--crema);text-decoration:none}
+.ig-btn b{display:block;font-size:1.1rem}
+.ig-btn span{display:block;font-size:.88rem;opacity:.75}
+.ig-btn.principal{background:var(--rojo);border-color:var(--rojo)}
+.ig-btn:focus-visible{outline:3px solid var(--crema);outline-offset:2px}
+.ig-dato{margin:18px 0 0;font-size:.95rem;opacity:.85}
+.ig-legal{margin-top:24px;font-size:.72rem;opacity:.55}
