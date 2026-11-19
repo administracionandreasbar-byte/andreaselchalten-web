@@ -10,6 +10,12 @@ const DOMINIO = 'https://andreaselchalten.com';
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    // Una sola dirección para Google: sin www y siempre con https
+    if (url.hostname.startsWith('www.') || url.protocol === 'http:') {
+      url.hostname = url.hostname.replace(/^www\./, '');
+      url.protocol = 'https:';
+      return Response.redirect(url.toString(), 301);
+    }
     const p = url.pathname, post = request.method === 'POST';
     try {
       if (p === '/api/clima') return await clima(ctx);
