@@ -2,7 +2,7 @@
 """Genera las páginas del sitio en español e inglés a partir de tools/data.py.
 Uso: python3 tools/build.py   (desde la raíz del repositorio)"""
 import os, html, json
-from data import NEGOCIO as N, MENU, MAS_PEDIDOS, RESENAS, MENU_AGENCIAS, PLATOS_AGENCIAS, VIANDA
+from data import NEGOCIO as N, MENU, MAS_PEDIDOS, RESENAS, MENU_AGENCIAS, PLATOS_AGENCIAS, VIANDA, FOTOS_MENU, FOTOS_SECCION, PREGUNTAS
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOMINIO = "https://andreaselchalten.com"
@@ -16,11 +16,32 @@ RUTAS = {
 }
 e = html.escape
 
+def miniaturas():
+    """Crea img/menu/<id>.webp (cuadradas, 176 px) a partir de FOTOS_MENU, solo si faltan o cambiaron."""
+    from PIL import Image
+    carpeta = os.path.join(RAIZ, "img", "menu")
+    os.makedirs(carpeta, exist_ok=True)
+    for iid, foto in FOTOS_MENU.items():
+        origen = os.path.join(RAIZ, "img", foto + ".webp")
+        destino = os.path.join(carpeta, iid + ".webp")
+        if os.path.exists(destino) and os.path.getmtime(destino) >= os.path.getmtime(origen):
+            continue
+        im = Image.open(origen).convert("RGB")
+        lado = min(im.size)
+        x, y = (im.width - lado) // 2, (im.height - lado) // 2
+        im.crop((x, y, x + lado, y + lado)).resize((176, 176), Image.LANCZOS).save(destino, "WEBP", quality=74, method=6)
+    sobran = set(os.listdir(carpeta)) - {i + ".webp" for i in FOTOS_MENU}
+    for f in sobran:
+        os.remove(os.path.join(carpeta, f))
+
 def precio(n, lang):
     s = f"{n:,}"
     return "$" + (s.replace(",", ".") if lang == "es" else s)
 
 ICONO_WA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3Z"/></svg>'
+
+# Campo trampa: invisible para las personas; si llega completo, el pedido es de un robot y se descarta.
+TRAMPA = '<div class="trampa" aria-hidden="true"><label>Sitio web<input name="web" tabindex="-1" autocomplete="off"></label></div>'
 
 def wa_link(texto):
     from urllib.parse import quote
@@ -64,7 +85,8 @@ def ld_json(lang):
             "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             "opens": "12:00", "closes": "23:59"}],
         "servesCuisine": ["Hamburguesas", "Milanesas", "Pizza", "Pastas", "Parrilla"] if es else ["Burgers", "Milanesa", "Pizza", "Pasta", "Steak"],
-        "priceRange": "$$", "currenciesAccepted": "ARS",
+        "priceRange": "$$", "currenciesAccepted": "ARS, USD, EUR",
+        "paymentAccepted": "Efectivo, tarjeta de crédito y débito, QR" if es else "Cash, credit and debit cards, QR",
         "hasMenu": DOMINIO + RUTAS["menu"][lang],
         "acceptsReservations": DOMINIO + RUTAS["reservas"][lang],
         "sameAs": [N["instagram"]],
@@ -130,6 +152,7 @@ def footer(lang, pagina=None):
 <a class="btn btn-claro" href="https://wa.me/{N['whatsapp']}?text={'Hola%2C%20vi%20la%20web%20de%20Andreas%20y%20quiero%20consultar%3A%20' if es else 'Hi%2C%20I%20saw%20the%20Andreas%20website%20and%20I%27d%20like%20to%20ask%3A%20'}">{ICONO_WA}WhatsApp</a>
 </nav>"""
     links = "".join(f'<li><a href="{RUTAS[k][lang]}">{e(v)}</a></li>' for k, v in t["nav"])
+    links += f'<li><a href="{RUTAS["inicio"][lang]}#preguntas">{"Preguntas frecuentes" if es else "FAQ"}</a></li>'
     return f"""</main>
 <footer class="pie">
 <div class="wrap">
@@ -196,7 +219,7 @@ def inicio(lang):
     titulo = "Andreas | Restaurante en El Chaltén: hamburguesas y cerveza artesanal" if es else "Andreas | Where to eat in El Chaltén: burgers & craft beer"
     desc = ("Restaurante en El Chaltén para después del sendero: hamburguesas, milanesas, pizzas, pastas y bife, con cerveza artesanal tirada. Todos los días de 12 a 24 h." if es else
             "Restaurant in El Chaltén for after the trail: burgers, milanesas, pizza, pasta and steak, with craft beer on tap. Open daily, noon to midnight.")
-    h = head(lang, "inicio", titulo, desc) + header(lang, "inicio")
+    h = head(lang, "inicio", titulo, desc).replace("</head>", ld_preguntas(lang) + "</head>", 1) + header(lang, "inicio")
     h += f"""<section class="portada" id="arriba">
 <img class="portada-foto" src="/img/salon-sandwich-1400.webp" srcset="/img/salon-sandwich-800.webp 800w, /img/salon-sandwich-1400.webp 1400w" sizes="100vw" alt="{'Sandwich del Puestero con papas en el salón de Andreas, con la calle San Martín de fondo' if es else 'Puestero sandwich with fries in the Andreas dining room, San Martín street behind'}" width="1400" height="1867" fetchpriority="high">
 <div class="wrap portada-texto">
@@ -286,6 +309,12 @@ def inicio(lang):
 <iframe class="mapa" src="{N['maps_embed']}" title="{'Mapa de Andreas en El Chaltén' if es else 'Map of Andreas in El Chaltén'}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>
 </section>
+<section class="seccion" id="preguntas">
+<div class="wrap">
+<h2>{'Preguntas frecuentes' if es else 'Frequently asked questions'}</h2>
+{preguntas_html(lang)}
+</div>
+</section>
 <nav class="indice" aria-label="{'En esta página' if es else 'On this page'}" data-indice>
 <ol>
 <li><a href="#arriba"><span>{'Inicio' if es else 'Top'}</span></a></li>
@@ -295,11 +324,34 @@ def inicio(lang):
 <li><a href="#grupos"><span>{'Grupos y agencias' if es else 'Groups'}</span></a></li>
 <li><a href="#viandas"><span>{'Viandas' if es else 'Packed lunches'}</span></a></li>
 <li><a href="#ubicacion"><span>{'Cómo llegar' if es else 'Find us'}</span></a></li>
+<li><a href="#preguntas"><span>{'Preguntas' if es else 'FAQ'}</span></a></li>
 <li class="indice-cta"><a href="{RUTAS['reservas'][lang]}">{'Reservar mesa' if es else 'Book a table'}</a></li>
 </ol>
 </nav>
 """
     return h + footer(lang)
+
+# ---------------- PREGUNTAS FRECUENTES ----------------
+def _link_pregunta(destino, lang):
+    return destino if destino.startswith("#") else RUTAS[destino][lang]
+
+def preguntas_html(lang):
+    es = lang == "es"
+    out = []
+    for q in PREGUNTAS:
+        r = q["r_es"] if es else q["r_en"]
+        link = ""
+        if q.get("link"):
+            d, t_es, t_en = q["link"]
+            link = f' <a href="{_link_pregunta(d, lang)}">{e(t_es if es else t_en)}</a>'
+        out.append(f'<details class="pregunta"><summary>{e(q[lang])}</summary><p>{e(r)}{link}</p></details>')
+    return '<div class="preguntas">' + "".join(out) + "</div>"
+
+def ld_preguntas(lang):
+    d = {"@context": "https://schema.org", "@type": "FAQPage", "inLanguage": lang,
+         "mainEntity": [{"@type": "Question", "name": q[lang],
+                         "acceptedAnswer": {"@type": "Answer", "text": q["r_" + lang]}} for q in PREGUNTAS]}
+    return '<script type="application/ld+json">' + json.dumps(d, ensure_ascii=False).replace("</", "<\\/") + "</script>\n"
 
 # ---------------- MENÚ ----------------
 SVG_LLAMA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.5 2s.9 3.1-1.3 5.8C9.4 10 7 11.7 7 15.2A5 5 0 0 0 12 20a5 5 0 0 0 5-4.8c0-2.2-1.1-3.6-2-4.6.1 1.5-.5 2.7-1.6 3.1.3-2.8-.4-5.9-.9-11.7Z"/></svg>'
@@ -320,9 +372,19 @@ def menu(lang):
             if "veg" in tags:
                 marcas += icono("veg", "Vegetariana" if es else "Vegetarian")
             d = d_es if es else d_en
-            lis.append(f'<li class="item"><h3>{e(n_es if es else n_en)}{marcas}</h3><span class="precio">{precio(p, lang)}</span>{f"<p>{e(d)}</p>" if d else ""}</li>')
+            nom = n_es if es else n_en
+            foto = ""
+            if iid in FOTOS_MENU:
+                foto = (f'<a class="foto-item" href="/img/{FOTOS_MENU[iid]}.webp" data-foto aria-label="{e(("Ver foto: " if es else "See photo: ") + nom)}">'
+                        f'<img src="/img/menu/{iid}.webp" alt="" width="88" height="88" loading="lazy"></a>')
+            lis.append(f'<li class="item{" con-foto" if foto else ""}">{foto}<h3>{e(nom)}{marcas}</h3><span class="precio">{precio(p, lang)}</span>{f"<p>{e(d)}</p>" if d else ""}</li>')
         nota = notaes if es else notaen
-        secciones.append(f'<section id="{sid}"><h2>{e(nes if es else nen)}</h2>{f"<p class=\"nota\">{e(nota)}</p>" if nota else ""}<ul class="items">{"".join(lis)}</ul></section>')
+        fotos = ""
+        if sid in FOTOS_SECCION:
+            fotos = '<div class="fotos-seccion">' + "".join(
+                f'<a href="/img/{f}.webp" data-foto aria-label="{e(("Ver foto: " if es else "See photo: ") + (a_es if es else a_en))}"><img src="/img/{f}.webp" alt="{e(a_es if es else a_en)}" width="800" height="1067" loading="lazy"></a>'
+                for f, a_es, a_en in FOTOS_SECCION[sid]) + "</div>"
+        secciones.append(f'<section id="{sid}"><h2>{e(nes if es else nen)}</h2>{f"<p class=\"nota\">{e(nota)}</p>" if nota else ""}{fotos}<ul class="items">{"".join(lis)}</ul></section>')
     titulo = "Menú con precios: hamburguesas, milanesas y pizzas | Andreas, El Chaltén" if es else "Menu with prices: burgers, milanesas & pizza | Andreas, El Chaltén"
     desc = "Carta completa con precios: hamburguesas, milanesas, pizzas, pastas, bife, cervezas, tragos y vinos." if es else "Full menu with prices: burgers, milanesas, pizza, pasta, steak, beer, cocktails and wine."
     h = head(lang, "menu", titulo, desc) + header(lang, "menu")
@@ -335,7 +397,7 @@ def menu(lang):
 <div class="carta"><div class="wrap">
 {''.join(secciones)}
 <div class="acciones" style="margin:28px 0 8px"><a class="btn btn-wa" href="{RUTAS['inicio'][lang]}#viandas">{'Encargá viandas para el sendero' if es else 'Order packed lunches for the trail'}</a></div>
-<p class="aviso">{'¿Alergias o restricciones? Avisale al mozo antes de pedir. La Corinto es vegetariana; no tenemos platos veganos.' if es else 'Allergies or dietary needs? Tell your server before ordering. The Corinto burger is vegetarian; we have no vegan dishes.'}<br>{T[lang]['legal']}</p>
+<p class="aviso">{'¿Tenés dudas sobre horarios, reservas o viandas? ' if es else 'Questions about hours, bookings or packed lunches? '}<a href="{RUTAS['inicio'][lang]}#preguntas">{'Mirá las preguntas frecuentes' if es else 'See the FAQ'}</a>.<br>{'¿Alergias o restricciones? Avisale al mozo antes de pedir. La Corinto es vegetariana; no tenemos platos veganos.' if es else 'Allergies or dietary needs? Tell your server before ordering. The Corinto burger is vegetarian; we have no vegan dishes.'}<br>{T[lang]['legal']}</p>
 </div></div>
 """
     return h + footer(lang)
@@ -462,7 +524,7 @@ def form_grupo(lang):
 <div><label for="g-pax">{'Pasajeros' if es else 'Passengers'}</label><input id="g-pax" type="number" min="4" max="25" required inputmode="numeric" data-etiqueta="{'Pasajeros' if es else 'Passengers'}"><p class="ayuda">{'De 4 a 25 personas.' if es else 'From 4 to 25 people.'}</p></div>
 <div><label for="g-menu">{'Menú' if es else 'Menu'}</label><select id="g-menu" required data-etiqueta="{'Menú' if es else 'Menu'}"><option value="">{'Elegí una opción' if es else 'Choose an option'}</option>{opciones}</select></div>
 <div class="full"><label for="g-notas">{'Comentarios' if es else 'Notes'}</label><textarea id="g-notas" data-etiqueta="{'Comentarios' if es else 'Notes'}" placeholder="{'Restricciones alimentarias, datos para la factura A, etc.' if es else 'Dietary needs, invoicing details, etc.'}"></textarea></div>
-<p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>
+{TRAMPA}<p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>
 <div class="full"><button class="btn btn-wa" type="submit">{ICONO_WA}{'Enviar por WhatsApp' if es else 'Send on WhatsApp'}</button></div>
 </form>"""
 
@@ -478,7 +540,7 @@ def form_viandas(lang):
 <div><label for="v-fecha">{'Día de retiro' if es else 'Pick-up day'}</label><input id="v-fecha" type="date" required data-anticipacion="1" data-etiqueta="{'Retiro' if es else 'Pick-up'}"></div>
 <div><label for="v-hora">{'Hora de retiro' if es else 'Pick-up time'}</label><input id="v-hora" type="time" required data-etiqueta="{'Hora' if es else 'Time'}"></div>
 <div class="full"><label for="v-notas">{'Comentarios' if es else 'Notes'}</label><textarea id="v-notas" data-etiqueta="{'Comentarios' if es else 'Notes'}" placeholder="{'Cuántas vegetarianas, a qué sendero vas, etc.' if es else 'How many vegetarian, which trail, etc.'}"></textarea></div>
-<p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>
+{TRAMPA}<p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>
 <div class="full"><button class="btn btn-wa" type="submit">{ICONO_WA}{'Pedir viandas por WhatsApp' if es else 'Order on WhatsApp'}</button></div>
 </form>"""
 
@@ -497,7 +559,7 @@ def form_evento(lang):
 <div><label for="e-hora">{'Hora' if es else 'Time'}</label><input id="e-hora" type="time" required data-etiqueta="{'Hora' if es else 'Time'}"></div>
 <div><label for="e-pax">{'Personas' if es else 'People'}</label><input id="e-pax" type="number" min="7" max="49" required inputmode="numeric" data-etiqueta="{'Personas' if es else 'People'}"><p class="ayuda">{'Desde 7 personas.' if es else 'From 7 people.'}</p></div>
 <div class="full"><label for="e-notas">{'Comentarios' if es else 'Notes'}</label><textarea id="e-notas" data-etiqueta="{'Comentarios' if es else 'Notes'}" placeholder="{'Torta propia, decoración, menú, restricciones, etc.' if es else 'Own cake, decorations, menu, dietary needs, etc.'}"></textarea></div>
-<p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>
+{TRAMPA}<p class="error full" hidden role="alert">{'Revisá los campos marcados: faltan datos.' if es else 'Please check the highlighted fields.'}</p>
 <div class="full"><button class="btn btn-wa" type="submit">{ICONO_WA}{'Pedir la mesa por WhatsApp' if es else 'Request it on WhatsApp'}</button></div>
 </form>"""
 
@@ -589,7 +651,7 @@ def reservas(lang):
 <div class="full"><label for="r-nombre">{'Nombre' if es else 'Name'}</label><input id="r-nombre" required autocomplete="name"></div>
 <div class="full"><label for="r-email">{'Correo (opcional)' if es else 'Email (optional)'}</label><input id="r-email" type="email" autocomplete="email"></div>
 <label class="check full"><input id="r-ok" type="checkbox" required> <span>{'Acepto que Andreas use estos datos solo para gestionar mi reserva (ley 25.326).' if es else 'I agree that Andreas will use this information only to manage my booking.'}</span></label>
-<p class="error full" hidden role="alert" data-error></p>
+{TRAMPA}<p class="error full" hidden role="alert" data-error></p>
 <div class="full"><button class="btn btn-wa" type="submit" data-enviar>{ICONO_WA}{'Reservar por WhatsApp' if es else 'Book on WhatsApp'}</button></div>
 </div>
 </div>
@@ -667,14 +729,15 @@ def pagina_ig():
 <title>Andreas – Food & Drinks for Adventurers</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#211f20">
-<link rel="icon" href="/img/icono-192.png">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="/css/site.css">
 </head>
 <body class="ig">
 <main class="ig-wrap">
-<img class="ig-logo" src="/img/logo-1024.png" alt="Andreas – Food & Drinks for Adventurers" width="96" height="96">
+<img class="ig-logo" src="/img/logo-512.webp" alt="Andreas – Food & Drinks for Adventurers" width="96" height="96">
 <p class="estado" data-estado><i></i><span>Open daily, noon to midnight</span></p>
 <h1>The day ends at Andreas.<small>La mesa donde termina la aventura.</small></h1>
 <nav class="ig-botones">{botones}</nav>
@@ -700,6 +763,7 @@ def escribir(ruta, contenido):
     with open(destino, "w", encoding="utf-8") as f:
         f.write(contenido)
 
+miniaturas()
 for lang in ("es", "en"):
     escribir(RUTAS["inicio"][lang], inicio(lang))
     escribir(RUTAS["menu"][lang], menu(lang))

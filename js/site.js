@@ -93,11 +93,34 @@
         var hecho = false, seguir = function () { if (!hecho) { hecho = true; abrir(); } };
         setTimeout(seguir, 2500);
         fetch('/api/grupo', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ agencia: v('g-agencia'), fecha: v('g-fecha'), hora: v('g-hora'), personas: v('g-pax'), menu: v('g-menu') || v('g-tipo'), zona: v('g-zona'), notas: v('g-notas'), tipo: form.dataset.tipo || 'Grupo', origen: ORIGEN, lang: lang }) })
+          body: JSON.stringify({ agencia: v('g-agencia'), fecha: v('g-fecha'), hora: v('g-hora'), personas: v('g-pax'), menu: v('g-menu') || v('g-tipo'), zona: v('g-zona'), notas: v('g-notas'), tipo: form.dataset.tipo || 'Grupo', origen: ORIGEN, lang: lang, web: (form.querySelector('[name="web"]') || {}).value || '' }) })
           .then(seguir, seguir);
         return;
       }
       abrir();
+    });
+  });
+})();
+
+// Visor de fotos de la carta (sin JavaScript, el link abre la foto sola)
+(function () {
+  var links = document.querySelectorAll('a[data-foto]');
+  if (!links.length || typeof HTMLDialogElement !== 'function') return;
+  var en = document.documentElement.lang === 'en';
+  var d = document.createElement('dialog');
+  d.className = 'visor';
+  d.innerHTML = '<img alt=""><p></p><button type="button" aria-label="' + (en ? 'Close' : 'Cerrar') + '">×</button>';
+  document.body.appendChild(d);
+  var img = d.querySelector('img'), txt = d.querySelector('p');
+  d.querySelector('button').addEventListener('click', function () { d.close(); });
+  d.addEventListener('click', function (ev) { if (ev.target === d) d.close(); });
+  links.forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      var item = a.closest('.item'), h = item && item.querySelector('h3');
+      var nombre = h ? h.firstChild.textContent : (a.querySelector('img') || {}).alt || '';
+      img.src = a.href; img.alt = nombre; txt.textContent = nombre;
+      d.showModal();
     });
   });
 })();

@@ -2,6 +2,7 @@
 // Pronóstico: MET Norway (api.met.no), licencia CC BY 4.0, uso comercial permitido.
 // CRM: un solo secreto en Cloudflare, NOTION_TOKEN (la clave de la integración de Notion).
 // Sin ese secreto, las reservas online quedan desactivadas y el sitio ofrece WhatsApp.
+// Instalación del CRM (/api/crm/instalar?clave=...): solo funciona si existe el secreto CRM_CLAVE y la clave coincide.
 import PROSPECTOS from './tools/prospectos.json';
 
 const LAT = -49.33, LON = -72.89;
@@ -17,13 +18,17 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
     const p = url.pathname, post = request.method === 'POST';
+    if (post && p.startsWith('/api/')) {
+      const freno = await antispam(request, url);
+      if (freno) return freno;
+    }
     try {
       if (p === '/api/clima') return await clima(ctx);
       if (p === '/api/ocupadas') return await ocupadasApi(url, env);
       if (p === '/api/reservas' && post) return await reservar(request, env);
       if (p === '/api/grupo' && post) return await grupo(request, env);
       if (p === '/api/socios' && post) return await altaSocio(request, env);
-      if (p === '/api/crm/instalar') return await instalar(env);
+      if (p === '/api/crm/instalar' && claveOk(url, env)) return await instalar(env);
     } catch (e) {
       return json({ error: 'crm', detalle: String(e.message || e).slice(0, 200) }, 502);
     }
@@ -52,6 +57,35 @@ async function clima(ctx) {
   });
   ctx.waitUntil(cache.put(clave, resp.clone()));
   return resp;
+}
+
+// ---------- protección ----------
+// La instalación del CRM queda cerrada salvo que se pase ?clave= igual al secreto CRM_CLAVE.
+function claveOk(url, env) {
+  const a = env.CRM_CLAVE || '', b = url.searchParams.get('clave') || '';
+  if (a.length < 12 || a.length !== b.length) return false;
+  let dif = 0;
+  for (let i = 0; i < a.length; i++) dif |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return dif === 0;
+}
+
+// Formularios: solo desde el propio sitio, con campo trampa y como máximo 8 envíos cada 10 minutos por conexión.
+const LIMITE_ENVIOS = 8, VENTANA_SEG = 600;
+async function antispam(request, url) {
+  const origen = request.headers.get('origin');
+  if (origen && origen !== url.origin) return json({ error: 'origen' }, 403);
+  let d = {};
+  try { d = await request.clone().json(); } catch {}
+  if (d && typeof d.web === 'string' && d.web.trim()) return json({ ok: true }); // robot: se le responde "ok" y no se guarda nada
+  const ip = request.headers.get('cf-connecting-ip');
+  if (!ip) return null;
+  const cache = caches.default;
+  const clave = new Request(`${DOMINIO}/__limite/${encodeURIComponent(ip)}`);
+  const previo = await cache.match(clave);
+  const n = previo ? (parseInt(await previo.text(), 10) || 0) : 0;
+  if (n >= LIMITE_ENVIOS) return json({ error: 'demasiados' }, 429);
+  await cache.put(clave, new Response(String(n + 1), { headers: { 'cache-control': `max-age=${VENTANA_SEG}` } }));
+  return null;
 }
 
 // ---------- utilidades ----------

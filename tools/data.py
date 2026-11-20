@@ -185,3 +185,57 @@ MESAS = [
     ("patio", "PB", "B", "lounge-calle", 470, 378, 15, 0, 2, True),
     ("patio", "PC", "C", "rect", 540, 120, 70, 190, 6, True),
 ]
+
+# Fotos de la carta: id del plato -> foto grande (img/<nombre>.webp).
+# La miniatura se genera sola en img/menu/<id>.webp al correr build.py.
+FOTOS_MENU = {
+    "mila-napo": "milanesa-napolitana-800",
+    "mila": "milanesa-800",
+    "cesar": "ensalada-cesar-800",
+    "fetuccini": "fetuccini-carbonara-800",
+    "puestero": "sandwich-puestero-800",
+    "tehuelche": "burger-tehuelche-800",
+    "volcan": "volcan-800",
+    "flan": "flan-800",
+    "cheese-bacon": "burger-cheddar-800",
+    "cordillerana": "burger-huevo-800",
+}
+# Fotos generales de una sección (no corresponden a un plato puntual)
+FOTOS_SECCION = {}
+
+# Preguntas frecuentes (portada). "link" es opcional: (ruta o #ancla, texto ES, texto EN).
+# Las rutas usan las claves de RUTAS en build.py: inicio, menu, agencias, reservas.
+PREGUNTAS = [
+    {"es": "¿Hace falta reservar?", "en": "Do I need a reservation?",
+     "r_es": "No es obligatorio: podés venir directamente. Si querés asegurarte una mesa, reservala online eligiéndola en el plano, con al menos 12 horas de anticipación, o escribinos por WhatsApp.",
+     "r_en": "No, you can just walk in. To make sure you get a table, book online by picking it on the floor plan at least 12 hours ahead, or message us on WhatsApp.",
+     "link": ("reservas", "Reservar mesa", "Book a table")},
+    {"es": "¿Qué horario tienen?", "en": "What are your opening hours?",
+     "r_es": "Abrimos todos los días de 12 a 24 h. El Happy Hour es de 16 a 20 h, con 2 cervezas por $15.000.",
+     "r_en": "We are open every day from noon to midnight. Happy Hour is from 4 to 8 pm, with 2 beers for $15,000."},
+    {"es": "¿Cómo se puede pagar?", "en": "How can I pay?",
+     "r_es": "Aceptamos tarjeta, QR, efectivo en pesos, dólares y euros.",
+     "r_en": "We accept cards, QR payments and cash in Argentine pesos, US dollars and euros."},
+    {"es": "¿Tienen opciones vegetarianas o veganas?", "en": "Do you have vegetarian or vegan options?",
+     "r_es": "Sí, vegetarianas: la hamburguesa Corinto con medallón de vegetales, la provoleta y las pizzas mozzarella, napolitana y fugazza. No tenemos platos veganos. Si tenés alergias, avisale al mozo antes de pedir.",
+     "r_en": "Vegetarian, yes: the Corinto veggie burger, grilled provolone and the mozzarella, napoletana and fugazza pizzas. We have no vegan dishes. If you have allergies, please tell your server before ordering.",
+     "link": ("menu", "Ver el menú", "See the menu")},
+    {"es": "¿Puedo llevar comida para el sendero?", "en": "Can I get food to take on the trail?",
+     "r_es": "Sí, preparamos viandas: dos sándwiches, un brownie y un agua por $20.000, o la supervianda con sándwich de milanesa por $25.000. Encargalas con 24 a 48 horas de anticipación y te confirmamos el horario de retiro por WhatsApp.",
+     "r_en": "Yes, we make packed lunches: two sandwiches, a brownie and water for $20,000, or the super pack with a milanesa sandwich for $25,000. Order 24 to 48 hours ahead and we confirm the pick-up time on WhatsApp.",
+     "link": ("#viandas", "Encargar viandas", "Order packed lunches")},
+    {"es": "¿Reciben grupos, cumpleaños o eventos?", "en": "Do you host groups, birthdays or events?",
+     "r_es": "Sí. Para 7 personas o más armamos una mesa grande, adentro o en el patio: pedila desde la página de reservas. Las agencias y guías tienen menú grupal para hasta 25 personas, servido en menos de 30 minutos y con factura A.",
+     "r_en": "Yes. For 7 or more people we set up a large table, indoors or on the patio: request it on the booking page. Agencies and guides have a group menu for up to 25 people, served in under 30 minutes, with invoices.",
+     "link": ("agencias", "Agencias, guías y hoteles", "Agencies, guides and hotels")},
+    {"es": "¿Se puede comer afuera? ¿Hay calefacción y wifi?", "en": "Can we sit outside? Is there heating and wifi?",
+     "r_es": "Sí: tenemos patio con mesas afuera sobre la calle San Martín y un salón calefaccionado para los días de viento. Hay wifi para los clientes.",
+     "r_en": "Yes: we have an outdoor patio on San Martín street and a heated dining room for windy days. Free wifi for customers."},
+    {"es": "¿Hablan inglés?", "en": "Do you speak English?",
+     "r_es": "Sí, atendemos en español y en inglés, y la carta está en los dos idiomas.",
+     "r_en": "Yes, we serve in Spanish and English, and the menu is available in both languages."},
+    {"es": "¿Dónde están?", "en": "Where are you?",
+     "r_es": "En San Martín 351, la calle principal de El Chaltén, en pleno centro.",
+     "r_en": "At San Martín 351, on the main street of El Chaltén, right in the centre of town.",
+     "link": ("#ubicacion", "Cómo llegar", "Get directions")},
+]
