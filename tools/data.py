@@ -197,14 +197,11 @@ FOTOS_MENU = {
     "tehuelche": "burger-tehuelche-800",
     "volcan": "volcan-800",
     "flan": "flan-800",
+    "cheese-bacon": "burger-cheddar-800",
+    "cordillerana": "burger-huevo-800",
 }
 # Fotos generales de una sección (no corresponden a un plato puntual)
-FOTOS_SECCION = {
-    "hamburguesas": [
-        ("burger-cheddar-800", "Hamburguesa con cheddar y papas fritas", "Burger with cheddar and fries"),
-        ("burger-huevo-800", "Hamburguesa con huevo y papas fritas", "Burger with egg and fries"),
-    ],
-}
+FOTOS_SECCION = {}
 
 # Preguntas frecuentes (portada). "link" es opcional: (ruta o #ancla, texto ES, texto EN).
 # Las rutas usan las claves de RUTAS en build.py: inicio, menu, agencias, reservas.
@@ -216,6 +213,9 @@ PREGUNTAS = [
     {"es": "¿Qué horario tienen?", "en": "What are your opening hours?",
      "r_es": "Abrimos todos los días de 12 a 24 h. El Happy Hour es de 16 a 20 h, con 2 cervezas por $15.000.",
      "r_en": "We are open every day from noon to midnight. Happy Hour is from 4 to 8 pm, with 2 beers for $15,000."},
+    {"es": "¿Cómo se puede pagar?", "en": "How can I pay?",
+     "r_es": "Aceptamos tarjeta, QR, efectivo en pesos, dólares y euros.",
+     "r_en": "We accept cards, QR payments and cash in Argentine pesos, US dollars and euros."},
     {"es": "¿Tienen opciones vegetarianas o veganas?", "en": "Do you have vegetarian or vegan options?",
      "r_es": "Sí, vegetarianas: la hamburguesa Corinto con medallón de vegetales, la provoleta y las pizzas mozzarella, napolitana y fugazza. No tenemos platos veganos. Si tenés alergias, avisale al mozo antes de pedir.",
      "r_en": "Vegetarian, yes: the Corinto veggie burger, grilled provolone and the mozzarella, napoletana and fugazza pizzas. We have no vegan dishes. If you have allergies, please tell your server before ordering.",
