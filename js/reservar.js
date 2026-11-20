@@ -119,7 +119,7 @@
     };
     var corte = setTimeout(abrirWA, 2500);
     fetch('/api/reservas', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ mesa: elegida.id, fecha: fecha.value, hora: hora.value, personas: +pax.value, nombre: $('#r-nombre').value.trim(), email: $('#r-email').value.trim(), lang: en ? 'en' : 'es', origen: origen })
+      body: JSON.stringify({ mesa: elegida.id, fecha: fecha.value, hora: hora.value, personas: +pax.value, nombre: $('#r-nombre').value.trim(), email: $('#r-email').value.trim(), lang: en ? 'en' : 'es', origen: origen, web: ($('[name="web"]') || {}).value || '' })
     }).then(function (r) { return r.json().then(function (d) { return { st: r.status, d: d }; }, function () { return { st: r.status, d: {} }; }); })
       .then(function (res) {
         if (listoYa) return;
