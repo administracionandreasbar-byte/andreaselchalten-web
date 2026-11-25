@@ -460,12 +460,12 @@ body.ig{background:var(--carbon);color:var(--crema);min-height:100vh}
 /* Botones cómodos para el dedo (mínimo 44 px) en pantallas táctiles */
 @media (pointer:coarse){
   .nav a{min-height:44px;display:inline-flex;align-items:center}
-  .idioma a,.idioma span{min-height:42px;display:inline-flex;align-items:center;padding:0 14px}
+  .idioma a,.idioma span{min-height:44px;display:inline-flex;align-items:center;padding:0 14px}
   .chips a{min-height:44px;display:inline-flex;align-items:center}
   .pie ul{gap:0}
   .pie ul a,.pie p a{display:inline-flex;align-items:center;min-height:44px}
 }
 @media (pointer:coarse){
-  .pregunta p a,.aviso a{display:inline-flex;align-items:center;min-height:44px}
+  .pregunta p a,.aviso a,main a[href^="mailto:"]{display:inline-flex;align-items:center;min-height:44px}
 }
 @media (max-width:760px) and (pointer:coarse){.chips{top:110px}.carta section{scroll-margin-top:172px}}
