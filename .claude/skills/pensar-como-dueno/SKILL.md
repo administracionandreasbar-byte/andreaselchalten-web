@@ -36,6 +36,22 @@ Los documentos de Finanzas, Planillas, propinas, bonos y datos del equipo son **
 4. **¿Qué ingresos se están dejando sobre la mesa?** Recorrer la escalera de valor de la Biblioteca (visita → reserva → grupo → convenio; vianda → menú grupal → convenio) y las unidades de negocio por separado (salón, viandas, agencias y hoteles): ¿cuál deja más plata por hora de trabajo? Buscar franjas con poca gente, mesas que se pierden por falta de aviso, tickets que se pueden subir sin esfuerzo, pedidos que llegan por WhatsApp y no se contestan a tiempo. Separar lo que **ya existe** (viandas, menú de grupos, mesas grandes, página de Instagram) de lo que es solo una idea.
 5. **¿Cómo decido en 10 minutos?** Si la decisión se puede deshacer, probarla dos semanas. Si no se puede deshacer, juntar **un** dato más y ponerle fecha tope. No quedarse analizando: una decisión sin fecha es otra forma de no decidir.
 
+## Modo consejo (para decisiones difíciles de deshacer)
+
+Claude tiende a darle la razón a quien le pregunta: si la pregunta ya trae una inclinación, la respuesta suele confirmarla. Para una decisión **grande o difícil de deshacer** (cambiar precios, un convenio, una promoción de temporada, un gasto), no responder solo: armar un consejo con subagentes (herramienta `Agent`), cada uno con contexto nuevo. Es la idea del "consejo de asesores" que circula para Claude, escrita acá con perspectivas propias del local.
+
+1. **Preparar un resumen neutro** de la decisión, con los hechos leídos en las fuentes (no la respuesta que uno prefiere). Todos los asesores reciben el mismo resumen y **no se les dice qué inclina al usuario**.
+2. **Cinco asesores en paralelo**, cada uno con una perspectiva y la orden de no halagar, contestar en unas 150 palabras, decir qué es hecho y qué es suposición, y qué dato le haría cambiar de opinión:
+   - **El escéptico:** qué se rompe primero y quién sale perdiendo.
+   - **El turista con hambre:** alguien que baja del cerro, cansado y con poco tiempo: ¿esto lo hace elegir Andreas o le da igual?
+   - **El salón y la cocina:** ¿se puede cumplir con el equipo, las mesas y los tiempos que hay?
+   - **El socio:** una agencia, un hotel o un guía: ¿qué gana y qué le molesta de esto?
+   - **El que mira la plata:** margen, costos y facturación total, sin inventar cifras: ¿cuánto hay que vender para que valga la pena?
+3. **Revisión a ciegas:** repartir las cinco respuestas sin decir quién es cada una (A a E) y pedirle a cada asesor que marque la objeción más fuerte y el punto más débil de las demás. Se puede saltear si el tiempo apremia.
+4. **Presidente (quien está respondiendo):** junta todo en un **veredicto** de una frase, las objeciones que quedaron en pie, un **único próximo paso** y la fecha para decidir. Si los asesores no se ponen de acuerdo, mostrar el desacuerdo, no taparlo.
+
+Límites que hay que decir en voz alta: los cinco asesores son el mismo modelo, así que **el consejo corrige el vicio de dar la razón, pero no agrega información nueva**: los datos reales vienen de las fuentes, de Álvaro y del salón. Y cuesta unas diez llamadas: no usarlo para decisiones chicas, para esas alcanzan las cinco preguntas.
+
 ## Cómo responder
 
 1. **Recomendación** en una frase.

@@ -20,6 +20,17 @@ pkill -f "http.server 8765"
 - La carpeta de capturas es opcional; usar el directorio temporal de la sesión, nunca el repositorio.
 - Sale con código 1 y lista cada problema si encuentra alguno; si no, imprime "Todo en orden".
 
+## Accesibilidad (WCAG 2.2 AA)
+
+Segunda revisión, con axe-core, sobre las mismas 9 páginas. Instalar axe-core en una carpeta temporal **fuera del repositorio** y correrla con el servidor de arriba levantado:
+
+```bash
+mkdir -p <tmp>/axe && cd <tmp>/axe && npm init -y >/dev/null && npm install axe-core@4.13.0
+NODE_PATH=$(npm root -g) node .claude/skills/revisar-sitio/accesibilidad.js <tmp>/axe
+```
+
+Tiene que decir "Sin violaciones". Un chequeo automático encuentra solo una parte de los problemas: la skill `accessibility-engineering` explica qué falta probar a mano (teclado y lector de pantalla). En la primera pasada (25/11/2026) encontró tres cosas, ya corregidas: el logo del encabezado no tenía texto para lectores de pantalla en el celular, y tres textos blancos sobre el rojo (cartel del Happy Hour, botón de `/ig/` y la leyenda legal del Happy Hour) no llegaban al contraste mínimo.
+
 ## Qué revisa
 
 Las 9 páginas (`/`, `/menu/`, `/reservas/`, `/agencias/`, `/ig/` y las 4 de `/en/`) en un iPhone 13:

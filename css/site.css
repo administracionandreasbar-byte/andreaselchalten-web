@@ -82,6 +82,7 @@ p{margin:0 0 .8em;max-width:62ch}
 .cartel:nth-child(2){background:var(--rojo)}
 .cartel:nth-child(3){background:var(--musgo)}
 .cartel small{display:block;font-size:.85rem;opacity:.85;margin-bottom:2px}
+.cartel:nth-child(2) small{opacity:1} /* blanco pleno sobre el rojo: contraste 5,3 (mínimo 4,5) */
 .cartel strong{font-weight:800;font-size:1.25rem;line-height:1.15;display:block}
 @media (max-width:760px){.carteles .wrap{grid-template-columns:1fr}}
 
@@ -410,7 +411,7 @@ details.pedir{margin-top:20px}
 details.pedir>summary{list-style:none;cursor:pointer;display:inline-flex}
 details.pedir>summary::-webkit-details-marker{display:none}
 details.pedir[open]>summary{display:none}
-.legal-hh{font-size:.8rem;opacity:.75;margin-top:10px}
+.legal-hh{font-size:.8rem;margin-top:10px} /* leyenda legal en blanco pleno: contraste 5,3 sobre el rojo */
 /* Link de la bio de Instagram */
 body.ig{background:var(--carbon);color:var(--crema);min-height:100vh}
 .ig-wrap{max-width:440px;margin:0 auto;padding:32px 16px 40px;text-align:center}
@@ -423,6 +424,7 @@ body.ig{background:var(--carbon);color:var(--crema);min-height:100vh}
 .ig-btn b{display:block;font-size:1.1rem}
 .ig-btn span{display:block;font-size:.88rem;opacity:.75}
 .ig-btn.principal{background:var(--rojo);border-color:var(--rojo)}
+.ig-btn.principal span{opacity:1}
 .ig-btn:focus-visible{outline:3px solid var(--crema);outline-offset:2px}
 .ig-dato{margin:18px 0 0;font-size:.95rem;opacity:.85}
 .ig-legal{margin-top:24px;font-size:.72rem;opacity:.55}
