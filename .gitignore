@@ -2,3 +2,10 @@ __pycache__/
 *.pyc
 .wrangler/
 node_modules/
+
+# real-sfx: índice de la biblioteca de sonidos y archivos de trabajo (se generan en cada máquina)
+.claude/skills/real-sfx/library_index.json
+.claude/skills/real-sfx/work/
+.claude/skills/real-sfx/result/
+# los sonidos de interfaz de real-sfx viven en una carpeta node_modules y sí se suben
+!.claude/skills/real-sfx/vendor/node_modules/
