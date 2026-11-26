@@ -35,7 +35,7 @@ Para el usuario, dejar estos pasos:
 
 1. Abrir andreaselchalten.com unos minutos después y buscar el cambio (por ejemplo "Preguntas frecuentes" al final de la portada).
 2. Si el despliegue automático de Cloudflare no lo publicó: `npx wrangler deploy` desde la carpeta del proyecto.
-3. Secretos del Worker (Cloudflare → Settings → Variables and Secrets): `NOTION_TOKEN` (reservas y CRM) y `CRM_CLAVE` (solo para reinstalar el CRM en `/api/crm/instalar?clave=…`, mínimo 12 caracteres). Sin `NOTION_TOKEN` las reservas online se desactivan y el sitio ofrece WhatsApp.
+3. Secretos del Worker (Cloudflare → Settings → Variables and Secrets): `NOTION_TOKEN` (reservas y CRM) y, opcional, `CRM_CLAVE`. Sin `CRM_CLAVE`, la página `/api/crm/instalar` está abierta (hace falta para la instalación inicial del CRM); con `CRM_CLAVE` (mínimo 12 caracteres) solo funciona con `/api/crm/instalar?clave=…`. Una vez instalado el CRM conviene cargar `CRM_CLAVE` para cerrarla. Sin `NOTION_TOKEN` las reservas online se desactivan y el sitio ofrece WhatsApp.
 
 ## Después
 
