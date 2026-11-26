@@ -2,7 +2,8 @@
 // Pronóstico: MET Norway (api.met.no), licencia CC BY 4.0, uso comercial permitido.
 // CRM: un solo secreto en Cloudflare, NOTION_TOKEN (la clave de la integración de Notion).
 // Sin ese secreto, las reservas online quedan desactivadas y el sitio ofrece WhatsApp.
-// Instalación del CRM (/api/crm/instalar?clave=...): solo funciona si existe el secreto CRM_CLAVE y la clave coincide.
+// Instalación del CRM (/api/crm/instalar): abierta mientras no exista el secreto CRM_CLAVE (hace falta para instalarlo la primera vez);
+// cuando se carga CRM_CLAVE en Cloudflare, solo funciona con ?clave=... igual a ese secreto.
 import PROSPECTOS from './tools/prospectos.json';
 
 const LAT = -49.33, LON = -72.89;
@@ -60,9 +61,10 @@ async function clima(ctx) {
 }
 
 // ---------- protección ----------
-// La instalación del CRM queda cerrada salvo que se pase ?clave= igual al secreto CRM_CLAVE.
+// Sin CRM_CLAVE la página está abierta (instalación inicial). Con CRM_CLAVE (mínimo 12 caracteres) exige ?clave= igual.
 function claveOk(url, env) {
   const a = env.CRM_CLAVE || '', b = url.searchParams.get('clave') || '';
+  if (!a) return true;
   if (a.length < 12 || a.length !== b.length) return false;
   let dif = 0;
   for (let i = 0; i < a.length; i++) dif |= a.charCodeAt(i) ^ b.charCodeAt(i);

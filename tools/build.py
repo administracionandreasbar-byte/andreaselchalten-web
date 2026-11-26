@@ -136,7 +136,7 @@ def header(lang, pagina):
         idioma = f'<a href="{RUTAS[pagina]["es"]}" hreflang="es" lang="es" aria-label="Versión en español">ES</a><span>EN</span>'
     return f"""<header class="top">
 <div class="wrap">
-<a class="marca" href="{RUTAS['inicio'][lang]}"><img src="/img/icon-192.png" alt="" width="44" height="44"><span>Andreas</span></a>
+<a class="marca" href="{RUTAS['inicio'][lang]}" aria-label="{'Andreas, ir al inicio' if lang == 'es' else 'Andreas, go to home'}"><img src="/img/icon-192.png" alt="" width="44" height="44"><span>Andreas</span></a>
 <nav class="nav" aria-label="{'Principal' if lang=='es' else 'Main'}">{nav}</nav>
 <div class="idioma">{idioma}</div>
 </div>
